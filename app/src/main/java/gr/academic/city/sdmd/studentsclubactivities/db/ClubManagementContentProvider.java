@@ -91,7 +91,7 @@ public class ClubManagementContentProvider extends ContentProvider {
                 tableName = ClubManagementContract.ClubActivity.TABLE_NAME;
                 break;
             default:
-                throw new IllegalArgumentException("Unknown URI " + uri);
+                throw new IllegalArgumentException("Totally Unknown URI " + uri);
         }
 
         // Get the database and insert
