@@ -1,0 +1,13 @@
+<resources>
+    <string name="app_name">StudentsClubActivities</string>
+    <string name="msg_no_clubs">There are no clubs to show right now. Refresh.</string>
+    <string name="msg_no_clubs_activities">There are no club activities to show right now. Refresh.</string>
+    <string name="add_activity">Add Activity</string>
+    <string name="title">Title</string>
+    <string name="short_note">Short Note</string>
+    <string name="long_note">Long Note</string>
+    <string name="ok">OK</string>
+    <string name="cancel">Cancel</string>
+    <string name="msg_activity_uploaded">Activity uploaded to server successfully. Click to view.</string>
+    <string name="activity_uploaded">Activity Uploaded</string>
+</resources>
