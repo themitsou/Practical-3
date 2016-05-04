@@ -5,6 +5,8 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
@@ -33,7 +35,7 @@ import gr.academic.city.sdmd.studentsclubactivities.util.Constants;
  * Created by trumpets on 4/13/16.
  */
 public class ClubActivitiesActivity extends ToolbarActivity implements LoaderManager.LoaderCallbacks<Cursor> {
-
+    private static final int DELETE_REQUEST = 1;
     private static final String EXTRA_CLUB_SERVER_ID = "club_server_id";
 
     private static final String[] PROJECTION = {
@@ -57,6 +59,8 @@ public class ClubActivitiesActivity extends ToolbarActivity implements LoaderMan
             R.id.tv_club_activity_short_note,
             R.id.tv_club_activity_date};
 
+    private static final String EXTRA_ACTIVITY_ID = "Activity_ID";
+
     public static Intent getStartIntent(Context context, long clubServerId) {
         Intent intent = new Intent(context, ClubActivitiesActivity.class);
         intent.putExtra(EXTRA_CLUB_SERVER_ID, clubServerId);
@@ -75,7 +79,7 @@ public class ClubActivitiesActivity extends ToolbarActivity implements LoaderMan
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_club_activities);
 
-        Toolbar myChildToolbar =(Toolbar) findViewById(R.id.toolbar);
+        Toolbar myChildToolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(myChildToolbar);
 
         ActionBar ab = getSupportActionBar();
@@ -112,12 +116,43 @@ public class ClubActivitiesActivity extends ToolbarActivity implements LoaderMan
         resultsListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                startActivity(ClubActivityDetailsActivity.getStartIntent(ClubActivitiesActivity.this, id));
+                startActivityForResult(ClubActivityDetailsActivity.getStartIntent(ClubActivitiesActivity.this, id), DELETE_REQUEST);
             }
         });
 
 
         getSupportLoaderManager().initLoader(CLUB_ACTIVITIES_LOADER, null, this);
+    }
+
+    @Override
+
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == DELETE_REQUEST) {
+            if (resultCode == RESULT_OK) {
+                final Long deleteActivityID = data.getLongExtra(EXTRA_ACTIVITY_ID, -1);
+
+                Snackbar.make(findViewById(R.id.coordinator_layout), R.string.msg_snackbar, Snackbar.LENGTH_LONG).setCallback(new Snackbar.Callback() {
+                    @Override
+                    public void onDismissed(Snackbar snackbar, int event) {
+                        switch (event) {
+                            case Snackbar.Callback.DISMISS_EVENT_ACTION:
+                                // do nothing
+                                break;
+                            case Snackbar.Callback.DISMISS_EVENT_TIMEOUT:
+
+                                ClubActivityService.startDeleteActivity(ClubActivitiesActivity.this, deleteActivityID);
+                                break;
+                        }
+                    }
+                }).setAction(R.string.undo, new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                    }
+                }).show();
+
+
+            }
+        }
     }
 
     @Override

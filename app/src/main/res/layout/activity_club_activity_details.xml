@@ -49,7 +49,7 @@
 
     <fragment
         android:id="@+id/map"
-        android:name="gr.academic.city.sdmd.studentsclubactivities.map.MapFragment"
+        android:name="com.google.android.gms.maps.MapFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_alignParentBottom="true"

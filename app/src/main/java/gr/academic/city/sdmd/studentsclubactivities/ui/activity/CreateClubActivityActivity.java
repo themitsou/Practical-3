@@ -6,6 +6,12 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.location.Address;
+import android.location.Criteria;
+import android.location.Geocoder;
+import android.location.Location;
+import android.location.LocationManager;
+import android.net.Uri;
 import android.os.Bundle;
 
 import android.support.v4.app.ActivityCompat;
@@ -19,23 +25,32 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.google.android.gms.appindexing.Action;
+import com.google.android.gms.appindexing.AppIndex;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
+import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
+import java.util.Locale;
 
 import gr.academic.city.sdmd.studentsclubactivities.R;
 import gr.academic.city.sdmd.studentsclubactivities.service.ClubActivityService;
 import gr.academic.city.sdmd.studentsclubactivities.util.Constants;
+
+import static gr.academic.city.sdmd.studentsclubactivities.R.*;
 
 /**
  * Created by trumpets on 4/13/16.
@@ -44,6 +59,11 @@ public class CreateClubActivityActivity extends ToolbarActivity implements OnMap
 
 
     private static final String EXTRA_CLUB_SERVER_ID = "club_server_id";
+    /**
+     * ATTENTION: This was auto-generated to implement the App Indexing API.
+     * See https://g.co/AppIndexing/AndroidStudio for more information.
+     */
+    private GoogleApiClient client;
 
     public static Intent getStartIntent(Context context, long clubServerId) {
         Intent intent = new Intent(context, CreateClubActivityActivity.class);
@@ -55,6 +75,7 @@ public class CreateClubActivityActivity extends ToolbarActivity implements OnMap
     private GoogleMap googleMap;
     private LatLng pointLocation;
     private long clubServerId;
+    private String addressString;
 
     private EditText txtTitle;
     private EditText txtShortNote;
@@ -68,13 +89,13 @@ public class CreateClubActivityActivity extends ToolbarActivity implements OnMap
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_create_club_activity);
+        setContentView(layout.activity_create_club_activity);
 
         MapFragment mapFragment = (MapFragment) getFragmentManager()
-                .findFragmentById(R.id.map);
+                .findFragmentById(id.map);
         mapFragment.getMapAsync(this);
 
-        Toolbar myChildToolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar myChildToolbar = (Toolbar) findViewById(id.toolbar);
         setSupportActionBar(myChildToolbar);
 
         ActionBar ab = getSupportActionBar();
@@ -83,10 +104,10 @@ public class CreateClubActivityActivity extends ToolbarActivity implements OnMap
 
         clubServerId = getIntent().getLongExtra(EXTRA_CLUB_SERVER_ID, -1);
 
-        txtTitle = (EditText) findViewById(R.id.txt_club_activity_title);
-        txtShortNote = (EditText) findViewById(R.id.txt_club_activity_short_note);
-        txtLongNote = (EditText) findViewById(R.id.txt_club_activity_long_note);
-        tvDate = (TextView) findViewById(R.id.tv_club_activity_date);
+        txtTitle = (EditText) findViewById(id.txt_club_activity_title);
+        txtShortNote = (EditText) findViewById(id.txt_club_activity_short_note);
+        txtLongNote = (EditText) findViewById(id.txt_club_activity_long_note);
+        tvDate = (TextView) findViewById(id.tv_club_activity_date);
 
         Date now = new Date();
         setupDate(now);
@@ -99,6 +120,9 @@ public class CreateClubActivityActivity extends ToolbarActivity implements OnMap
         });
 
 
+        // ATTENTION: This was auto-generated to implement the App Indexing API.
+        // See https://g.co/AppIndexing/AndroidStudio for more information.
+        client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
     }
 
     private void saveNewClubActivity() {
@@ -107,7 +131,7 @@ public class CreateClubActivityActivity extends ToolbarActivity implements OnMap
                 txtTitle.getText().toString(),
                 txtShortNote.getText().toString(),
                 txtLongNote.getText().toString(),
-                timestamp, pointLocation.latitude, pointLocation.longitude, pointLocation.toString());
+                timestamp, pointLocation.latitude, pointLocation.longitude, addressString);
 
         finish();
     }
@@ -142,12 +166,12 @@ public class CreateClubActivityActivity extends ToolbarActivity implements OnMap
 
     @Override
     protected int getContentView() {
-        return R.layout.activity_main;
+        return layout.activity_main;
     }
 
     @Override
     protected int getTitleResource() {
-        return R.string.home;
+        return string.home;
     }
 
     @Override
@@ -159,7 +183,7 @@ public class CreateClubActivityActivity extends ToolbarActivity implements OnMap
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.action_save:
+            case id.action_save:
                 saveNewClubActivity();
                 return true;
 
@@ -171,32 +195,68 @@ public class CreateClubActivityActivity extends ToolbarActivity implements OnMap
 
     @Override
     public void onMapReady(GoogleMap map) {
+
         googleMap = map;
+
+        LatLng cityCollegeLocation = new LatLng(40.637679,22.9350098);
+        googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(cityCollegeLocation, 13));
 
         googleMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
 
-            @Override
-            public void onMapClick(LatLng point) {
+                                            @Override
+                                            public void onMapClick(LatLng point) {
 
-                // Drawing marker on the map
-                drawMarker(point);
-                pointLocation = point;
+                                                Geocoder gc = new Geocoder(CreateClubActivityActivity.this, Locale.getDefault());
+
+                                                try {
+
+                                                    List<Address> addresses = gc.getFromLocation(point.latitude, point.longitude, 1);
+                                                    StringBuilder sb = new StringBuilder();
+
+                                                    if (addresses.size() > 0) {
+                                                        Address address = addresses.get(0);
+
+                                                        for (int i = 0; i < address.getMaxAddressLineIndex(); i++)
+                                                            sb.append(address.getAddressLine(i)).append("\n");
+
+                                                        sb.append(address.getCountryName());
+                                                    }
+                                                    addressString = sb.toString();
+                                                } catch (IOException e) {
+                                                }
+
+                                                if (addressString == null) {
+
+                                                    addressString = "No location found";
+                                                }
 
 
-            }
-        });
+                                                // Drawing marker on the map
+                                                drawMarker(point);
 
-        }
+                                                pointLocation = point;
 
-    private void drawMarker(LatLng point){
+
+                                            }
+                                        }
+
+        );
+
+
+    }
+
+    private void drawMarker(final LatLng point) {
         // Creating an instance of MarkerOptions
         MarkerOptions markerOptions = new MarkerOptions();
 
         // Setting latitude and longitude for the marker
         markerOptions.position(point);
 
+        markerOptions.title(addressString);
+
         // Adding marker on the Google Map
         googleMap.addMarker(markerOptions);
+
     }
 
 }
