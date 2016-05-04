@@ -1,5 +1,6 @@
 package gr.academic.city.sdmd.studentsclubactivities.ui.activity;
 
+import android.content.Intent;
 import android.database.Cursor;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -10,15 +11,20 @@ import android.support.v4.widget.CursorAdapter;
 import android.support.v4.widget.SimpleCursorAdapter;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.Toast;
+
 
 import gr.academic.city.sdmd.studentsclubactivities.R;
 import gr.academic.city.sdmd.studentsclubactivities.db.ClubManagementContract;
 import gr.academic.city.sdmd.studentsclubactivities.service.ClubService;
 
-public class MainActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor> {
+public class MainActivity extends ToolbarActivity implements LoaderManager.LoaderCallbacks<Cursor> {
 
     private static final String[] PROJECTION = {
             ClubManagementContract.Club._ID,
@@ -31,10 +37,10 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     private static final int CLUBS_LOADER = 0;
 
     private final static String[] FROM_COLUMNS = {
-            ClubManagementContract.Club.COLUMN_NAME_CLUB_NAME };
+            ClubManagementContract.Club.COLUMN_NAME_CLUB_NAME};
 
     private final static int[] TO_IDS = {
-            R.id.tv_club_name };
+            R.id.tv_club_name};
 
     private CursorAdapter adapter;
 
@@ -44,6 +50,9 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        Toolbar myToolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(myToolbar);
 
         adapter = new SimpleCursorAdapter(this, R.layout.item_club, null, FROM_COLUMNS, TO_IDS, 0);
 
@@ -70,6 +79,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
         getSupportLoaderManager().initLoader(CLUBS_LOADER, null, this);
     }
+
 
     @Override
     protected void onResume() {
@@ -128,5 +138,25 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         protected void onPostExecute(Void aVoid) {
             swipeRefreshLayout.setRefreshing(false);
         }
+    }
+
+    @Override
+    protected int getContentView() {
+        return R.layout.activity_main;
+    }
+
+    @Override
+    protected int getTitleResource() {
+        return R.string.home;
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        return true;
     }
 }

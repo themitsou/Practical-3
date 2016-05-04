@@ -16,6 +16,7 @@ public class ClubManagementDBHelper extends SQLiteOpenHelper {
     private static final String TEXT_TYPE = " TEXT";
     private static final String INT_TYPE = " INTEGER";
     private static final String SHORT_TYPE = " SHORT";
+    private static final String DOUBLE_TYPE = " DOUBLE";
     private static final String COMMA_SEP = ",";
 
     private static final String SQL_CREATE_CLUBS =
@@ -32,6 +33,9 @@ public class ClubManagementDBHelper extends SQLiteOpenHelper {
                     ClubManagementContract.ClubActivity.COLUMN_NAME_SHORT_NOTE + TEXT_TYPE + COMMA_SEP +
                     ClubManagementContract.ClubActivity.COLUMN_NAME_LONG_NOTE + TEXT_TYPE + COMMA_SEP +
                     ClubManagementContract.ClubActivity.COLUMN_NAME_TIMESTAMP + INT_TYPE + COMMA_SEP +
+                    ClubManagementContract.ClubActivity.COLUMN_NAME_LAT + DOUBLE_TYPE + COMMA_SEP +
+                    ClubManagementContract.ClubActivity.COLUMN_NAME_LNG + DOUBLE_TYPE + COMMA_SEP +
+                    ClubManagementContract.ClubActivity.COLUMN_NAME_LOCATION + TEXT_TYPE + COMMA_SEP +
                     ClubManagementContract.ClubActivity.COLUMN_NAME_UPLOADED_TO_SERVER + SHORT_TYPE + COMMA_SEP +
                     ClubManagementContract.ClubActivity.COLUMN_NAME_SERVER_ID + INT_TYPE + COMMA_SEP +
                     ClubManagementContract.ClubActivity.COLUMN_NAME_CLUB_SERVER_ID + INT_TYPE +

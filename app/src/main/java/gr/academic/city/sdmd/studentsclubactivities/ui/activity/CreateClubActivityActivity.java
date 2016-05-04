@@ -1,14 +1,33 @@
 package gr.academic.city.sdmd.studentsclubactivities.ui.activity;
 
+import android.Manifest;
 import android.app.DatePickerDialog;
+import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
+
+import android.support.v4.app.ActivityCompat;
+import android.support.v7.app.ActionBar;
+
+import android.support.v7.widget.Toolbar;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.TextView;
+
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GooglePlayServicesUtil;
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.MapFragment;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -21,7 +40,8 @@ import gr.academic.city.sdmd.studentsclubactivities.util.Constants;
 /**
  * Created by trumpets on 4/13/16.
  */
-public class CreateClubActivityActivity extends AppCompatActivity {
+public class CreateClubActivityActivity extends ToolbarActivity implements OnMapReadyCallback {
+
 
     private static final String EXTRA_CLUB_SERVER_ID = "club_server_id";
 
@@ -32,6 +52,8 @@ public class CreateClubActivityActivity extends AppCompatActivity {
         return intent;
     }
 
+    private GoogleMap googleMap;
+    private LatLng pointLocation;
     private long clubServerId;
 
     private EditText txtTitle;
@@ -47,6 +69,17 @@ public class CreateClubActivityActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_club_activity);
+
+        MapFragment mapFragment = (MapFragment) getFragmentManager()
+                .findFragmentById(R.id.map);
+        mapFragment.getMapAsync(this);
+
+        Toolbar myChildToolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(myChildToolbar);
+
+        ActionBar ab = getSupportActionBar();
+        ab.setDisplayHomeAsUpEnabled(true);
+
 
         clubServerId = getIntent().getLongExtra(EXTRA_CLUB_SERVER_ID, -1);
 
@@ -64,20 +97,8 @@ public class CreateClubActivityActivity extends AppCompatActivity {
                 showDatePicker();
             }
         });
-        
-        findViewById(R.id.btn_ok).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                saveNewClubActivity();
-            }
-        });
-        
-        findViewById(R.id.btn_cancel).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
-            }
-        });
+
+
     }
 
     private void saveNewClubActivity() {
@@ -86,7 +107,7 @@ public class CreateClubActivityActivity extends AppCompatActivity {
                 txtTitle.getText().toString(),
                 txtShortNote.getText().toString(),
                 txtLongNote.getText().toString(),
-                timestamp);
+                timestamp, pointLocation.latitude, pointLocation.longitude, pointLocation.toString());
 
         finish();
     }
@@ -118,4 +139,65 @@ public class CreateClubActivityActivity extends AppCompatActivity {
 
         dialog.show();
     }
+
+    @Override
+    protected int getContentView() {
+        return R.layout.activity_main;
+    }
+
+    @Override
+    protected int getTitleResource() {
+        return R.string.home;
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.new_activity_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_save:
+                saveNewClubActivity();
+                return true;
+
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+
+    @Override
+    public void onMapReady(GoogleMap map) {
+        googleMap = map;
+
+        googleMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
+
+            @Override
+            public void onMapClick(LatLng point) {
+
+                // Drawing marker on the map
+                drawMarker(point);
+                pointLocation = point;
+
+
+            }
+        });
+
+        }
+
+    private void drawMarker(LatLng point){
+        // Creating an instance of MarkerOptions
+        MarkerOptions markerOptions = new MarkerOptions();
+
+        // Setting latitude and longitude for the marker
+        markerOptions.position(point);
+
+        // Adding marker on the Google Map
+        googleMap.addMarker(markerOptions);
+    }
+
 }
+

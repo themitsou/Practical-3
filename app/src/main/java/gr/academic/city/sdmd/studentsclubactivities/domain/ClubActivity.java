@@ -23,6 +23,15 @@ public class ClubActivity {
     @SerializedName("date")
     private long timestamp;
 
+    @SerializedName("latitude")
+    private double latitude;
+
+    @SerializedName("longitude")
+    private double longitude;
+
+    @SerializedName("location")
+    private String location;
+
     @SerializedName("id")
     private long serverId;
 
@@ -34,11 +43,14 @@ public class ClubActivity {
 
     }
 
-    public ClubActivity(String title, String shortNote, String longNote, long timestamp, long clubServerId) {
+    public ClubActivity(String title, String shortNote, String longNote, long timestamp, double latitude, double longitude, String location, long clubServerId) {
         this.title = title;
         this.shortNote = shortNote;
         this.longNote = longNote;
         this.timestamp = timestamp;
+        this.latitude = latitude;
+        this.longitude = longitude;
+        this.location = location;
         this.club = new Club(clubServerId);
     }
 
@@ -49,6 +61,9 @@ public class ClubActivity {
         contentValues.put(ClubManagementContract.ClubActivity.COLUMN_NAME_SHORT_NOTE, shortNote);
         contentValues.put(ClubManagementContract.ClubActivity.COLUMN_NAME_LONG_NOTE, longNote);
         contentValues.put(ClubManagementContract.ClubActivity.COLUMN_NAME_TIMESTAMP, timestamp);
+        contentValues.put(ClubManagementContract.ClubActivity.COLUMN_NAME_LAT, latitude);
+        contentValues.put(ClubManagementContract.ClubActivity.COLUMN_NAME_LNG, longitude);
+        contentValues.put(ClubManagementContract.ClubActivity.COLUMN_NAME_LOCATION, location);
         contentValues.put(ClubManagementContract.ClubActivity.COLUMN_NAME_SERVER_ID, serverId);
         contentValues.put(ClubManagementContract.ClubActivity.COLUMN_NAME_CLUB_SERVER_ID, club.getServerId());
 

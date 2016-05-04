@@ -11,7 +11,11 @@ import android.support.v4.content.Loader;
 import android.support.v4.widget.CursorAdapter;
 import android.support.v4.widget.SimpleCursorAdapter;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
@@ -28,7 +32,7 @@ import gr.academic.city.sdmd.studentsclubactivities.util.Constants;
 /**
  * Created by trumpets on 4/13/16.
  */
-public class ClubActivitiesActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor> {
+public class ClubActivitiesActivity extends ToolbarActivity implements LoaderManager.LoaderCallbacks<Cursor> {
 
     private static final String EXTRA_CLUB_SERVER_ID = "club_server_id";
 
@@ -71,6 +75,12 @@ public class ClubActivitiesActivity extends AppCompatActivity implements LoaderM
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_club_activities);
 
+        Toolbar myChildToolbar =(Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(myChildToolbar);
+
+        ActionBar ab = getSupportActionBar();
+        ab.setDisplayHomeAsUpEnabled(true);
+
         this.clubServerId = getIntent().getLongExtra(EXTRA_CLUB_SERVER_ID, -1);
 
         swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_refresh);
@@ -106,12 +116,6 @@ public class ClubActivitiesActivity extends AppCompatActivity implements LoaderM
             }
         });
 
-        findViewById(R.id.btn_add_activity).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(CreateClubActivityActivity.getStartIntent(ClubActivitiesActivity.this, clubServerId));
-            }
-        });
 
         getSupportLoaderManager().initLoader(CLUB_ACTIVITIES_LOADER, null, this);
     }
@@ -176,6 +180,34 @@ public class ClubActivitiesActivity extends AppCompatActivity implements LoaderM
         @Override
         protected void onPostExecute(Void aVoid) {
             swipeRefreshLayout.setRefreshing(false);
+        }
+    }
+
+    @Override
+    protected int getContentView() {
+        return R.layout.activity_main;
+    }
+
+    @Override
+    protected int getTitleResource() {
+        return R.string.home;
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.activities_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_add:
+                startActivity(CreateClubActivityActivity.getStartIntent(ClubActivitiesActivity.this, clubServerId));
+                return true;
+
+            default:
+                return super.onOptionsItemSelected(item);
         }
     }
 }

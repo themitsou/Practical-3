@@ -6,9 +6,15 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.app.LoaderManager;
+import android.support.v4.app.NavUtils;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.View;
 import android.widget.TextView;
 
 import java.text.SimpleDateFormat;
@@ -16,12 +22,13 @@ import java.util.Date;
 
 import gr.academic.city.sdmd.studentsclubactivities.R;
 import gr.academic.city.sdmd.studentsclubactivities.db.ClubManagementContract;
+import gr.academic.city.sdmd.studentsclubactivities.service.ClubActivityService;
 import gr.academic.city.sdmd.studentsclubactivities.util.Constants;
 
 /**
  * Created by trumpets on 4/13/16.
  */
-public class ClubActivityDetailsActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor> {
+public class ClubActivityDetailsActivity extends ToolbarActivity implements LoaderManager.LoaderCallbacks<Cursor> {
 
     private static final String EXTRA_CLUB_ACTIVITY_ID = "club_activity_id";
 
@@ -46,8 +53,13 @@ public class ClubActivityDetailsActivity extends AppCompatActivity implements Lo
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         setContentView(R.layout.activity_club_activity_details);
+
+        Toolbar myChildToolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(myChildToolbar);
+
+        ActionBar ab = getSupportActionBar();
+        ab.setDisplayHomeAsUpEnabled(true);
 
         clubActivityId = getIntent().getLongExtra(EXTRA_CLUB_ACTIVITY_ID, -1);
 
@@ -58,6 +70,7 @@ public class ClubActivityDetailsActivity extends AppCompatActivity implements Lo
 
         getSupportLoaderManager().initLoader(CLUB_ACTIVITY_LOADER, null, this);
     }
+
 
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
@@ -98,5 +111,37 @@ public class ClubActivityDetailsActivity extends AppCompatActivity implements Lo
         if (cursor != null) {
             cursor.close();
         }
+    }
+
+    @Override
+    protected int getContentView() {
+        return R.layout.activity_main;
+    }
+
+    @Override
+    protected int getTitleResource() {
+        return R.string.home;
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.activity_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_delete:
+                deleteClubActivity();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+    private void deleteClubActivity() {
+        ClubActivityService.startDeleteActivity(this,clubActivityId);
+        finish();
     }
 }

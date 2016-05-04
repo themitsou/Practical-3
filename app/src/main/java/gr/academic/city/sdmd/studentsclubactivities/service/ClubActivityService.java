@@ -1,9 +1,11 @@
 package gr.academic.city.sdmd.studentsclubactivities.service;
 
 import android.app.IntentService;
+import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 
 import java.text.MessageFormat;
 
@@ -29,6 +31,12 @@ public class ClubActivityService extends IntentService {
     private static final String EXTRA_SHORT_NOTE = "short_note";
     private static final String EXTRA_LONG_NOTE = "long_note";
     private static final String EXTRA_TIMESTAMP = "timestamp";
+    private static final String EXTRA_LATITUDE = "latitude";
+    private static final String EXTRA_LONGITUDE = "longitude";
+    private static final String EXTRA_LOCATION = "location";
+
+    private static final String ACTION_DELETE_CLUB_ACTIVITY = "gr.academic.city.sdmd.studentsclubactivities.DELETE_CLUB_ACTIVITY";
+    private static final String EXTRA_CLUB_SERVER_ACTIVITY_ID = "club_server_activity_id";
 
     public static void startFetchActivities(Context context,  long clubServerId) {
         Intent intent = new Intent(context, ClubActivityService.class);
@@ -38,7 +46,15 @@ public class ClubActivityService extends IntentService {
         context.startService(intent);
     }
 
-    public static void startCreateClubActivity(Context context, long clubServerId, String title, String shortNote, String longNote, long timestamp) {
+    public static void startDeleteActivity(Context context,  long clubServerActivityId) {
+        Intent intent = new Intent(context, ClubActivityService.class);
+        intent.setAction(ACTION_DELETE_CLUB_ACTIVITY);
+        intent.putExtra(EXTRA_CLUB_SERVER_ACTIVITY_ID, clubServerActivityId);
+
+        context.startService(intent);
+    }
+
+    public static void startCreateClubActivity(Context context, long clubServerId, String title, String shortNote, String longNote, long timestamp, double latitude, double longitude, String location) {
         Intent intent = new Intent(context, ClubActivityService.class);
         intent.setAction(ACTION_CREATE_CLUB_ACTIVITY);
         intent.putExtra(EXTRA_CLUB_SERVER_ID, clubServerId);
@@ -46,6 +62,9 @@ public class ClubActivityService extends IntentService {
         intent.putExtra(EXTRA_SHORT_NOTE, shortNote);
         intent.putExtra(EXTRA_LONG_NOTE, longNote);
         intent.putExtra(EXTRA_TIMESTAMP, timestamp);
+        intent.putExtra(EXTRA_LATITUDE, latitude);
+        intent.putExtra(EXTRA_LONGITUDE, longitude);
+        intent.putExtra(EXTRA_LOCATION, location);
 
         context.startService(intent);
     }
@@ -60,6 +79,8 @@ public class ClubActivityService extends IntentService {
             fetchActivities(intent);
         } else if (ACTION_CREATE_CLUB_ACTIVITY.equals(intent.getAction())) {
             createClubActivity(intent);
+        }else if(ACTION_DELETE_CLUB_ACTIVITY.equals(intent.getAction())){
+            deleteClubActivity(intent);
         } else {
             throw new UnsupportedOperationException("Action not supported: " + intent.getAction());
         }
@@ -98,8 +119,11 @@ public class ClubActivityService extends IntentService {
         String shortNote = intent.getStringExtra(EXTRA_SHORT_NOTE);
         String longNote = intent.getStringExtra(EXTRA_LONG_NOTE);
         long timestamp = intent.getLongExtra(EXTRA_TIMESTAMP, -1);
+        double latitude =  intent.getDoubleExtra(EXTRA_LATITUDE, -1);
+        double longitude =  intent.getDoubleExtra(EXTRA_LONGITUDE, -1);
+        String location = intent.getStringExtra(EXTRA_LOCATION);
 
-        ContentValues contentValues = new ClubActivity(title, shortNote, longNote, timestamp, clubServerId).toContentValues();
+        ContentValues contentValues = new ClubActivity(title, shortNote, longNote, timestamp, latitude, longitude, location, clubServerId).toContentValues();
         contentValues.put(ClubManagementContract.ClubActivity.COLUMN_NAME_UPLOADED_TO_SERVER, 0);
         contentValues.put(ClubManagementContract.ClubActivity.COLUMN_NAME_SERVER_ID, -1);
 
@@ -107,6 +131,24 @@ public class ClubActivityService extends IntentService {
                 ClubManagementContract.ClubActivity.CONTENT_URI,
                 contentValues
                 );
+
+        sendBroadcast(new Intent(TriggerPushToServerBroadcastReceiver.ACTION_TRIGGER));
+    }
+
+    private void deleteClubActivity (Intent intent) {
+        long clubServerActivityId = intent.getLongExtra(EXTRA_CLUB_SERVER_ACTIVITY_ID, -1);
+
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(ClubManagementContract.ClubActivity.COLUMN_NAME_UPLOADED_TO_SERVER, -1);
+
+        getContentResolver().update(
+                ContentUris.withAppendedId(ClubManagementContract.ClubActivity.CONTENT_URI, clubServerActivityId),
+                contentValues,
+                null,
+                null
+        );
+
+
 
         sendBroadcast(new Intent(TriggerPushToServerBroadcastReceiver.ACTION_TRIGGER));
     }

@@ -6,12 +6,15 @@
     android:layout_height="match_parent"
     tools:context="gr.academic.city.sdmd.studentsclubactivities.ui.activity.MainActivity">
 
+    <include layout="@layout/layout_toolbar"
+        android:id="@+id/toolbar" />
+
     <android.support.v4.widget.SwipeRefreshLayout
         android:id="@+id/swipe_refresh"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/btn_add_activity"
-        android:layout_alignParentTop="true">
+        android:layout_alignParentBottom="true"
+        android:layout_below="@+id/toolbar">
 
         <ListView
             android:id="@android:id/list"
@@ -20,12 +23,5 @@
 
     </android.support.v4.widget.SwipeRefreshLayout>
 
-    <Button
-        android:id="@+id/btn_add_activity"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_marginBottom="15dp"
-        android:layout_marginTop="15dp"
-        android:text="@string/add_activity"/>
+
 </RelativeLayout>
