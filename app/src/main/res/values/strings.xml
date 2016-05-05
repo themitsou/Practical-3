@@ -6,6 +6,7 @@
     <string name="title">Title</string>
     <string name="short_note">Short Note</string>
     <string name="long_note">Long Note</string>
+    <string name="location">Location</string>
     <string name="ok">OK</string>
     <string name="cancel">Cancel</string>
     <string name="msg_activity_uploaded">Activity uploaded to server successfully. Click to view.</string>
@@ -16,9 +17,10 @@
     <string name="action_search">Search</string>
     <string name="home">Home</string>
     <string name="google_api_key">AIzaSyD34PoBxALwQ4xLPYc29inTXJ1czU8h1rA</string>
+    <string name="google_places_key">AIzaSyDS3UGNgVP4rXNSIn_eQIKflJ8JbBRWu3E</string>
     <string name="action_delete">Delete Activity</string>
     <string name="action_save">Save Activity</string>
     <string name="city_name">CITY College, the International Faculty of the University of Sheffield, Leontos Sofou, Thessaloniki</string>
-    <string name="msg_snackbar">One Activity Will Be Deleted!</string>
+    <string name="msg_snackbar">One Activity Queued for Deletion!</string>
     <string name="undo">UNDO</string>
 </resources>

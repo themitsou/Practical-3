@@ -25,8 +25,9 @@ dependencies {
     compile "com.android.support:appcompat-v7:${SUPPORT_LIBRARY_VERSION}"
     compile "com.google.code.gson:gson:${GSON_VERSION}"
     compile 'com.google.android.gms:play-services-maps:8.4.0'
+    compile 'com.google.android.gms:play-services:8.4.0'
+    compile 'com.google.android.gms:play-services-appindexing:8.4.0'
     compile 'com.android.support:appcompat-v7:24.0.0-alpha2'
     compile 'com.android.support:design:24.0.0-alpha2'
-    compile 'com.google.android.gms:play-services-appindexing:8.4.0'
     compile 'com.android.support:design:23.0.2'
 }
