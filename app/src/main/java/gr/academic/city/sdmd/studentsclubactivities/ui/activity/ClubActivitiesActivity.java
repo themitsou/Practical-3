@@ -3,10 +3,13 @@ package gr.academic.city.sdmd.studentsclubactivities.ui.activity;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
@@ -29,35 +32,16 @@ import java.util.Date;
 import gr.academic.city.sdmd.studentsclubactivities.R;
 import gr.academic.city.sdmd.studentsclubactivities.db.ClubManagementContract;
 import gr.academic.city.sdmd.studentsclubactivities.service.ClubActivityService;
+import gr.academic.city.sdmd.studentsclubactivities.ui.activity.fragments.ClubActivitiesFragment;
+import gr.academic.city.sdmd.studentsclubactivities.ui.activity.fragments.ClubActivityDetailsFragment;
 import gr.academic.city.sdmd.studentsclubactivities.util.Constants;
 
 /**
  * Created by trumpets on 4/13/16.
  */
-public class ClubActivitiesActivity extends ToolbarActivity implements LoaderManager.LoaderCallbacks<Cursor> {
+public class ClubActivitiesActivity extends ToolbarActivity implements ClubActivitiesFragment.OnListFragmentInteractionListener {
     private static final int DELETE_REQUEST = 1;
     private static final String EXTRA_CLUB_SERVER_ID = "club_server_id";
-
-    private static final String[] PROJECTION = {
-            ClubManagementContract.ClubActivity._ID,
-            ClubManagementContract.ClubActivity.COLUMN_NAME_TITLE,
-            ClubManagementContract.ClubActivity.COLUMN_NAME_SHORT_NOTE,
-            ClubManagementContract.ClubActivity.COLUMN_NAME_TIMESTAMP
-    };
-
-    private static final String SORT_ORDER = ClubManagementContract.ClubActivity.COLUMN_NAME_TIMESTAMP + " DESC";
-
-    private static final int CLUB_ACTIVITIES_LOADER = 10;
-
-    private final static String[] FROM_COLUMNS = {
-            ClubManagementContract.ClubActivity.COLUMN_NAME_TITLE,
-            ClubManagementContract.ClubActivity.COLUMN_NAME_SHORT_NOTE,
-            ClubManagementContract.ClubActivity.COLUMN_NAME_TIMESTAMP};
-
-    private final static int[] TO_IDS = {
-            R.id.tv_club_activity_title,
-            R.id.tv_club_activity_short_note,
-            R.id.tv_club_activity_date};
 
     private static final String EXTRA_ACTIVITY_ID = "Activity_ID";
 
@@ -69,10 +53,7 @@ public class ClubActivitiesActivity extends ToolbarActivity implements LoaderMan
     }
 
     private long clubServerId;
-    private CursorAdapter adapter;
-    private SimpleDateFormat dateFormat = new SimpleDateFormat(Constants.CLUB_ACTIVITIES_DATE_FORMAT);
-
-    private SwipeRefreshLayout swipeRefreshLayout;
+     private boolean isDualPane;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -87,41 +68,23 @@ public class ClubActivitiesActivity extends ToolbarActivity implements LoaderMan
 
         this.clubServerId = getIntent().getLongExtra(EXTRA_CLUB_SERVER_ID, -1);
 
-        swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_refresh);
-        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                initiateClubActivitiesRefresh();
-            }
-        });
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentTransaction fragmentTransaction =
+                fragmentManager.beginTransaction();
+        ClubActivitiesFragment fragment = ClubActivitiesFragment.newInstance(clubServerId);
+        fragmentTransaction.add(R.id.fragment_list_container, fragment);
+        fragmentTransaction.commit();
 
-        adapter = new SimpleCursorAdapter(this, R.layout.item_club_activity, null, FROM_COLUMNS, TO_IDS, 0);
-        ((SimpleCursorAdapter) adapter).setViewBinder(new SimpleCursorAdapter.ViewBinder() {
-            @Override
-            public boolean setViewValue(View view, Cursor cursor, int columnIndex) {
-                if (columnIndex == cursor.getColumnIndexOrThrow(ClubManagementContract.ClubActivity.COLUMN_NAME_TIMESTAMP) && view instanceof TextView) {
-                    // we have to convert the timestamp to a human readable date)
-
-                    TextView textView = (TextView) view;
-                    textView.setText(dateFormat.format(new Date(cursor.getLong(columnIndex))));
-                    return true;
-                } else {
-                    return false;
-                }
-            }
-        });
-
-        ListView resultsListView = (ListView) findViewById(android.R.id.list);
-        resultsListView.setAdapter(adapter);
-        resultsListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                startActivityForResult(ClubActivityDetailsActivity.getStartIntent(ClubActivitiesActivity.this, id), DELETE_REQUEST);
-            }
-        });
+        View fragmentContainer = findViewById(R.id.fragment_detail_container);
+        isDualPane = fragmentContainer != null &&
+                fragmentContainer.getVisibility() == View.VISIBLE;
+        if (isDualPane) {
+//            fragmentTransaction = getSupportFragmentManager().beginTransaction();
+//            fragmentTransaction.replace(R.id.fragment_detail_container, ClubActivityDetailsFragment.newInstance(null));
+//            fragmentTransaction.commit();
+        }
 
 
-        getSupportLoaderManager().initLoader(CLUB_ACTIVITIES_LOADER, null, this);
     }
 
     @Override
@@ -162,61 +125,6 @@ public class ClubActivitiesActivity extends ToolbarActivity implements LoaderMan
         ClubActivityService.startFetchActivities(this, clubServerId);
     }
 
-    @Override
-    public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-        switch (id) {
-            case CLUB_ACTIVITIES_LOADER:
-                return new CursorLoader(this,
-                        ClubManagementContract.ClubActivity.CONTENT_URI,
-                        PROJECTION,
-                        ClubManagementContract.ClubActivity.COLUMN_NAME_CLUB_SERVER_ID + " = ?",
-                        new String[]{String.valueOf(clubServerId)},
-                        SORT_ORDER
-                );
-
-            default:
-                return null;
-        }
-    }
-
-    @Override
-    public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
-        adapter.changeCursor(data);
-    }
-
-    @Override
-    public void onLoaderReset(Loader<Cursor> loader) {
-        adapter.changeCursor(null);
-    }
-
-    private void initiateClubActivitiesRefresh() {
-        if (!swipeRefreshLayout.isRefreshing()) {
-            swipeRefreshLayout.setRefreshing(true);
-        }
-
-        new FetchClubActivitiesAsyncTast().execute(clubServerId);
-    }
-
-    private class FetchClubActivitiesAsyncTast extends AsyncTask<Long, Void, Void> {
-
-        @Override
-        protected Void doInBackground(Long... params) {
-            ClubActivityService.startFetchActivities(ClubActivitiesActivity.this, params[0]);
-
-            try {
-                // giving the service ample time to finish
-                Thread.sleep(1000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(Void aVoid) {
-            swipeRefreshLayout.setRefreshing(false);
-        }
-    }
 
     @Override
     protected int getContentView() {
@@ -244,5 +152,19 @@ public class ClubActivitiesActivity extends ToolbarActivity implements LoaderMan
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+
+    @Override
+    public void onClubActivitySelected(Long activity) {
+        if (isDualPane) {
+            FragmentManager fragmentManager = getSupportFragmentManager();
+            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+            fragmentTransaction.replace(R.id.fragment_detail_container, ClubActivityDetailsFragment.newInstance(activity));
+            fragmentTransaction.commit();
+        }else{
+             startActivity(ClubActivityDetailsActivity.getStartIntent(ClubActivitiesActivity.this, activity));
+        }
+
     }
 }
