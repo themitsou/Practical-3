@@ -5,6 +5,7 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
@@ -43,18 +44,13 @@ public class ClubActivitiesFragment extends Fragment implements SwipeRefreshLayo
     public interface OnListFragmentInteractionListener {
         void onClubActivitySelected(Long activity);
     }
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
 
-    // TODO: Rename and change types of parameters
+    private static final String ARG_PARAM1 = "param1";
     private Long mParam1;
     private SwipeRefreshLayout swipeRefreshLayout;
     private CursorAdapter adapter;
     private View view;
     private SimpleDateFormat dateFormat = new SimpleDateFormat(Constants.CLUB_ACTIVITIES_DATE_FORMAT);
-    private static final int DELETE_REQUEST = 1;
     private static final int CLUB_ACTIVITIES_LOADER = 10;
     private long clubServerId;
     private WeakReference<FetchClubActivitiesAsyncTast> asyncTaskWeakRef;
@@ -63,7 +59,8 @@ public class ClubActivitiesFragment extends Fragment implements SwipeRefreshLayo
             ClubManagementContract.ClubActivity._ID,
             ClubManagementContract.ClubActivity.COLUMN_NAME_TITLE,
             ClubManagementContract.ClubActivity.COLUMN_NAME_SHORT_NOTE,
-            ClubManagementContract.ClubActivity.COLUMN_NAME_TIMESTAMP
+            ClubManagementContract.ClubActivity.COLUMN_NAME_TIMESTAMP,
+            ClubManagementContract.ClubActivity.COLUMN_NAME_SERVER_ID
     };
 
     private static final String SORT_ORDER = ClubManagementContract.ClubActivity.COLUMN_NAME_TIMESTAMP + " DESC";
@@ -83,14 +80,7 @@ public class ClubActivitiesFragment extends Fragment implements SwipeRefreshLayo
 
     private OnListFragmentInteractionListener mListener;
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @return A new instance of fragment ClubActivitiesFragment.
-     */
-    // TODO: Rename and change types and number of parameters
+
     public static ClubActivitiesFragment newInstance(Long param1) {
         ClubActivitiesFragment fragment = new ClubActivitiesFragment(param1);
         Bundle args = new Bundle();
@@ -99,6 +89,10 @@ public class ClubActivitiesFragment extends Fragment implements SwipeRefreshLayo
         return fragment;
     }
     public ClubActivitiesFragment(long clubServerId) {
+        // Required empty public constructor
+    }
+
+    public ClubActivitiesFragment() {
         // Required empty public constructor
     }
 
@@ -201,7 +195,8 @@ public class ClubActivitiesFragment extends Fragment implements SwipeRefreshLayo
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
-        adapter.changeCursor(data);
+           adapter.changeCursor(data);
+
     }
 
     @Override
@@ -258,4 +253,5 @@ public class ClubActivitiesFragment extends Fragment implements SwipeRefreshLayo
             swipeRefreshLayout.setRefreshing(false);
         }
     }
+
 }

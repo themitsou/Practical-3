@@ -32,6 +32,7 @@ import java.util.Date;
 import gr.academic.city.sdmd.studentsclubactivities.R;
 import gr.academic.city.sdmd.studentsclubactivities.db.ClubManagementContract;
 import gr.academic.city.sdmd.studentsclubactivities.service.ClubActivityService;
+import gr.academic.city.sdmd.studentsclubactivities.ui.activity.fragments.BlankFragment;
 import gr.academic.city.sdmd.studentsclubactivities.ui.activity.fragments.ClubActivitiesFragment;
 import gr.academic.city.sdmd.studentsclubactivities.ui.activity.fragments.ClubActivityDetailsFragment;
 import gr.academic.city.sdmd.studentsclubactivities.util.Constants;
@@ -39,7 +40,7 @@ import gr.academic.city.sdmd.studentsclubactivities.util.Constants;
 /**
  * Created by trumpets on 4/13/16.
  */
-public class ClubActivitiesActivity extends ToolbarActivity implements ClubActivitiesFragment.OnListFragmentInteractionListener {
+public class ClubActivitiesActivity extends ToolbarActivity implements ClubActivitiesFragment.OnListFragmentInteractionListener, ClubActivityDetailsFragment.OnFragmentInteractionListener {
     private static final int DELETE_REQUEST = 1;
     private static final String EXTRA_CLUB_SERVER_ID = "club_server_id";
 
@@ -53,7 +54,7 @@ public class ClubActivitiesActivity extends ToolbarActivity implements ClubActiv
     }
 
     private long clubServerId;
-     private boolean isDualPane;
+    private boolean isDualPane;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -162,9 +163,37 @@ public class ClubActivitiesActivity extends ToolbarActivity implements ClubActiv
             FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
             fragmentTransaction.replace(R.id.fragment_detail_container, ClubActivityDetailsFragment.newInstance(activity));
             fragmentTransaction.commit();
-        }else{
-             startActivity(ClubActivityDetailsActivity.getStartIntent(ClubActivitiesActivity.this, activity));
+        } else {
+            startActivityForResult(ClubActivityDetailsActivity.getStartIntent(ClubActivitiesActivity.this, activity), DELETE_REQUEST);
         }
 
+    }
+
+    @Override
+    public void onClubActivityDeleted(final Long activity) {
+
+        Snackbar.make(findViewById(R.id.coordinator_layout), R.string.msg_snackbar, Snackbar.LENGTH_LONG).setCallback(new Snackbar.Callback() {
+            @Override
+            public void onDismissed(Snackbar snackbar, int event) {
+                switch (event) {
+                    case Snackbar.Callback.DISMISS_EVENT_ACTION:
+                        // do nothing
+                        break;
+                    case Snackbar.Callback.DISMISS_EVENT_TIMEOUT:
+
+                        ClubActivityService.startDeleteActivity(ClubActivitiesActivity.this, activity);
+                        FragmentManager fragmentManager = getSupportFragmentManager();
+                        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                        fragmentTransaction = getSupportFragmentManager().beginTransaction();
+                        fragmentTransaction.replace(R.id.fragment_detail_container,new BlankFragment());
+                        fragmentTransaction.commit();
+                        break;
+                }
+            }
+        }).setAction(R.string.undo, new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+            }
+        }).show();
     }
 }

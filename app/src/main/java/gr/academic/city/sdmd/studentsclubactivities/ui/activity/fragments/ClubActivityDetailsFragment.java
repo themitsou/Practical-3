@@ -2,20 +2,23 @@ package gr.academic.city.sdmd.studentsclubactivities.ui.activity.fragments;
 
 import android.content.ContentUris;
 import android.content.Context;
-import android.content.Intent;
 import android.database.Cursor;
-import android.net.Uri;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
+import android.view.ContextMenu;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -32,18 +35,14 @@ import java.util.Date;
 
 import gr.academic.city.sdmd.studentsclubactivities.R;
 import gr.academic.city.sdmd.studentsclubactivities.db.ClubManagementContract;
+import gr.academic.city.sdmd.studentsclubactivities.service.ClubActivityService;
 import gr.academic.city.sdmd.studentsclubactivities.util.Constants;
 
-/**
- * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * to handle interaction events.
- * Use the {@link ClubActivityDetailsFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
 public class ClubActivityDetailsFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> , OnMapReadyCallback {
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
+
+    public interface OnFragmentInteractionListener {
+        void onClubActivityDeleted(Long activity);
+    }
     private static final String ARG_PARAM1 = "param1";
     private SimpleDateFormat dateFormat = new SimpleDateFormat(Constants.CLUB_ACTIVITIES_DATE_FORMAT);
     private static final int CLUB_ACTIVITY_LOADER = 20;
@@ -65,23 +64,15 @@ public class ClubActivityDetailsFragment extends Fragment implements LoaderManag
 
 
     private View view;
-
-    // TODO: Rename and change types of parameters
     private Long mParam1;
+
+    private OnFragmentInteractionListener mListener;
 
      public ClubActivityDetailsFragment() {
         // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
 
-     * @return A new instance of fragment ClubActivityDetailsFragment.
-     */
-    // TODO: Rename and change types and number of parameters
     public static ClubActivityDetailsFragment newInstance(Long param1) {
         ClubActivityDetailsFragment fragment = new ClubActivityDetailsFragment(param1);
         Bundle args = new Bundle();
@@ -93,6 +84,7 @@ public class ClubActivityDetailsFragment extends Fragment implements LoaderManag
     public ClubActivityDetailsFragment(long clubActivityId) {
         // Required empty public constructor
     }
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -111,12 +103,9 @@ public class ClubActivityDetailsFragment extends Fragment implements LoaderManag
         // Inflate the layout for this fragment
         view =  inflater.inflate(R.layout.fragment_club_activity_details, container, false);
 
-        MapFragment mapFragment;
         FragmentManager fm = getChildFragmentManager();
         fragment = (SupportMapFragment) fm.findFragmentById(R.id.map);
         fragment.getMapAsync(this);
-
-
 
         tvTitle = (TextView) view.findViewById(R.id.tv_club_activity_title);
         tvShortNote = (TextView) view.findViewById(R.id.tv_club_activity_short_note);
@@ -133,13 +122,18 @@ public class ClubActivityDetailsFragment extends Fragment implements LoaderManag
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-
+        if (context instanceof OnFragmentInteractionListener) {
+            mListener = (OnFragmentInteractionListener) context;
+        } else {
+            throw new RuntimeException(context.toString()
+                    + " must implement OnFragmentInteractionListener");
+        }
     }
 
     @Override
     public void onDetach() {
         super.onDetach();
-
+        mListener = null;
     }
 
     @Override
@@ -172,19 +166,9 @@ public class ClubActivityDetailsFragment extends Fragment implements LoaderManag
     @Override
     public void onMapReady(GoogleMap map) {
         googleMap = map;
-
+        googleMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
     }
 
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p/>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     */
 
 
     private void updateView(Cursor cursor) {
@@ -222,21 +206,19 @@ public class ClubActivityDetailsFragment extends Fragment implements LoaderManag
     }
 
     @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.activity_menu, menu);
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_delete:
-                deleteClubActivity();
+                mListener.onClubActivityDeleted(clubActivityId);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
-    }
-
-    private void deleteClubActivity() {
-        Intent intent = new Intent();
-        intent.putExtra(EXTRA_ACTIVITY_ID, clubActivityId);
-//        setResult(RESULT_OK, intent);
-//        finish();
     }
 
 }
