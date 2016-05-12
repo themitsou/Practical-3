@@ -100,8 +100,8 @@ public class PushToServerService extends IntentService {
         Cursor cursor = getContentResolver().query(
                 ClubManagementContract.ClubActivity.CONTENT_URI,
                 null,
-                ClubManagementContract.ClubActivity.COLUMN_NAME_UPLOADED_TO_SERVER + " = ?",
-                new String[]{String.valueOf(-1)},
+                ClubManagementContract.ClubActivity.COLUMN_NAME_FOR_DELETION + " = ?",
+                new String[]{String.valueOf(1)},
                 null);
 
         while (cursor.moveToNext()) {

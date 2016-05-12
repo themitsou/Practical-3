@@ -36,6 +36,7 @@ public class ClubActivityService extends IntentService {
     private static final String EXTRA_LOCATION = "location";
 
     private static final String ACTION_DELETE_CLUB_ACTIVITY = "gr.academic.city.sdmd.studentsclubactivities.DELETE_CLUB_ACTIVITY";
+    private static final String ACTION_UNDELETE_CLUB_ACTIVITY = "gr.academic.city.sdmd.studentsclubactivities.UNDELETE_CLUB_ACTIVITY";
     private static final String EXTRA_CLUB_SERVER_ACTIVITY_ID = "club_server_activity_id";
 
     public static void startFetchActivities(Context context,  long clubServerId) {
@@ -49,6 +50,14 @@ public class ClubActivityService extends IntentService {
     public static void startDeleteActivity(Context context,  long clubServerActivityId) {
         Intent intent = new Intent(context, ClubActivityService.class);
         intent.setAction(ACTION_DELETE_CLUB_ACTIVITY);
+        intent.putExtra(EXTRA_CLUB_SERVER_ACTIVITY_ID, clubServerActivityId);
+
+        context.startService(intent);
+    }
+
+    public static void startUnDeleteActivity(Context context,  long clubServerActivityId) {
+        Intent intent = new Intent(context, ClubActivityService.class);
+        intent.setAction(ACTION_UNDELETE_CLUB_ACTIVITY);
         intent.putExtra(EXTRA_CLUB_SERVER_ACTIVITY_ID, clubServerActivityId);
 
         context.startService(intent);
@@ -81,6 +90,8 @@ public class ClubActivityService extends IntentService {
             createClubActivity(intent);
         }else if(ACTION_DELETE_CLUB_ACTIVITY.equals(intent.getAction())){
             deleteClubActivity(intent);
+        }else if(ACTION_UNDELETE_CLUB_ACTIVITY.equals(intent.getAction())){
+            unDeleteClubActivity(intent);
         } else {
             throw new UnsupportedOperationException("Action not supported: " + intent.getAction());
         }
@@ -126,6 +137,7 @@ public class ClubActivityService extends IntentService {
         ContentValues contentValues = new ClubActivity(title, shortNote, longNote, timestamp, latitude, longitude, location, clubServerId).toContentValues();
         contentValues.put(ClubManagementContract.ClubActivity.COLUMN_NAME_UPLOADED_TO_SERVER, 0);
         contentValues.put(ClubManagementContract.ClubActivity.COLUMN_NAME_SERVER_ID, -1);
+        contentValues.put(ClubManagementContract.ClubActivity.COLUMN_NAME_FOR_DELETION, 0);
 
         getContentResolver().insert(
                 ClubManagementContract.ClubActivity.CONTENT_URI,
@@ -139,7 +151,7 @@ public class ClubActivityService extends IntentService {
         long clubServerActivityId = intent.getLongExtra(EXTRA_CLUB_SERVER_ACTIVITY_ID, -1);
 
         ContentValues contentValues = new ContentValues();
-        contentValues.put(ClubManagementContract.ClubActivity.COLUMN_NAME_UPLOADED_TO_SERVER, -1);
+        contentValues.put(ClubManagementContract.ClubActivity.COLUMN_NAME_FOR_DELETION, 1);
 
         getContentResolver().update(
                 ContentUris.withAppendedId(ClubManagementContract.ClubActivity.CONTENT_URI, clubServerActivityId),
@@ -149,7 +161,20 @@ public class ClubActivityService extends IntentService {
         );
 
 
+    }
+    private void unDeleteClubActivity (Intent intent) {
+        long clubServerActivityId = intent.getLongExtra(EXTRA_CLUB_SERVER_ACTIVITY_ID, -1);
 
-        sendBroadcast(new Intent(TriggerPushToServerBroadcastReceiver.ACTION_TRIGGER));
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(ClubManagementContract.ClubActivity.COLUMN_NAME_FOR_DELETION, 0);
+
+        getContentResolver().update(
+                ContentUris.withAppendedId(ClubManagementContract.ClubActivity.CONTENT_URI, clubServerActivityId),
+                contentValues,
+                null,
+                null
+        );
+
+
     }
 }

@@ -41,6 +41,7 @@ public final class ClubManagementContract {
         public static final String COLUMN_NAME_UPLOADED_TO_SERVER = "uploaded_to_server";
         public static final String COLUMN_NAME_SERVER_ID = "server_id";
         public static final String COLUMN_NAME_CLUB_SERVER_ID = "club_server_id";
+        public static final String COLUMN_NAME_FOR_DELETION = "for_deletion";
 
         public static final Uri CONTENT_URI = Uri.parse("content://" +
                 AUTHORITY + "/" + TABLE_NAME);

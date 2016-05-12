@@ -183,8 +183,8 @@ public class ClubActivitiesFragment extends Fragment implements SwipeRefreshLayo
                 return new CursorLoader(view.getContext(),
                         ClubManagementContract.ClubActivity.CONTENT_URI,
                         PROJECTION,
-                        ClubManagementContract.ClubActivity.COLUMN_NAME_CLUB_SERVER_ID + " = ?",
-                        new String[]{String.valueOf(clubServerId)},
+                        ClubManagementContract.ClubActivity.COLUMN_NAME_CLUB_SERVER_ID + " = ? AND "+ ClubManagementContract.ClubActivity.COLUMN_NAME_FOR_DELETION + " = ? "  ,
+                        new String[]{String.valueOf(clubServerId),String.valueOf(0)},
                         SORT_ORDER
                 );
 

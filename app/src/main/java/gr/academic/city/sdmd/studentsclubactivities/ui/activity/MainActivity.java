@@ -64,7 +64,7 @@ public class MainActivity extends ToolbarActivity implements LoaderManager.Loade
             }
         });
 
-        ListView resultsListView = (ListView) findViewById(android.R.id.list);
+        ListView resultsListView = (ListView) findViewById(R.id.list);
         resultsListView.setAdapter(adapter);
         resultsListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override

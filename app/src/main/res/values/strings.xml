@@ -21,9 +21,10 @@
     <string name="action_delete">Delete Activity</string>
     <string name="action_save">Save Activity</string>
     <string name="city_name">CITY College, the International Faculty of the University of Sheffield, Leontos Sofou, Thessaloniki</string>
-    <string name="msg_snackbar">One Activity Queued for Deletion!</string>
+    <string name="msg_snackbar">One Activity Deleted!</string>
     <string name="undo">UNDO</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="thessaloniki_city">Thessaloniki</string>
 </resources>

@@ -18,6 +18,7 @@ public class ClubManagementDBHelper extends SQLiteOpenHelper {
     private static final String SHORT_TYPE = " SHORT";
     private static final String DOUBLE_TYPE = " DOUBLE";
     private static final String COMMA_SEP = ",";
+    private static final String DEFAULT_0 = " DEFAULT (0)";
 
     private static final String SQL_CREATE_CLUBS =
             "CREATE TABLE " + ClubManagementContract.Club.TABLE_NAME + " (" +
@@ -38,7 +39,8 @@ public class ClubManagementDBHelper extends SQLiteOpenHelper {
                     ClubManagementContract.ClubActivity.COLUMN_NAME_LOCATION + TEXT_TYPE + COMMA_SEP +
                     ClubManagementContract.ClubActivity.COLUMN_NAME_UPLOADED_TO_SERVER + SHORT_TYPE + COMMA_SEP +
                     ClubManagementContract.ClubActivity.COLUMN_NAME_SERVER_ID + INT_TYPE + COMMA_SEP +
-                    ClubManagementContract.ClubActivity.COLUMN_NAME_CLUB_SERVER_ID + INT_TYPE +
+                    ClubManagementContract.ClubActivity.COLUMN_NAME_CLUB_SERVER_ID + INT_TYPE + COMMA_SEP +
+                    ClubManagementContract.ClubActivity.COLUMN_NAME_FOR_DELETION + SHORT_TYPE + DEFAULT_0 +
                     " )";
 
     private static final String SQL_DELETE_CLUBS =

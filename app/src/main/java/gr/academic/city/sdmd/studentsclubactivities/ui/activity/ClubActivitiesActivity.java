@@ -31,6 +31,7 @@ import java.util.Date;
 
 import gr.academic.city.sdmd.studentsclubactivities.R;
 import gr.academic.city.sdmd.studentsclubactivities.db.ClubManagementContract;
+import gr.academic.city.sdmd.studentsclubactivities.receiver.TriggerPushToServerBroadcastReceiver;
 import gr.academic.city.sdmd.studentsclubactivities.service.ClubActivityService;
 import gr.academic.city.sdmd.studentsclubactivities.ui.activity.fragments.BlankFragment;
 import gr.academic.city.sdmd.studentsclubactivities.ui.activity.fragments.ClubActivitiesFragment;
@@ -79,13 +80,6 @@ public class ClubActivitiesActivity extends ToolbarActivity implements ClubActiv
         View fragmentContainer = findViewById(R.id.fragment_detail_container);
         isDualPane = fragmentContainer != null &&
                 fragmentContainer.getVisibility() == View.VISIBLE;
-        if (isDualPane) {
-//            fragmentTransaction = getSupportFragmentManager().beginTransaction();
-//            fragmentTransaction.replace(R.id.fragment_detail_container, ClubActivityDetailsFragment.newInstance(null));
-//            fragmentTransaction.commit();
-        }
-
-
     }
 
     @Override
@@ -94,6 +88,7 @@ public class ClubActivitiesActivity extends ToolbarActivity implements ClubActiv
         if (requestCode == DELETE_REQUEST) {
             if (resultCode == RESULT_OK) {
                 final Long deleteActivityID = data.getLongExtra(EXTRA_ACTIVITY_ID, -1);
+                ClubActivityService.startDeleteActivity(ClubActivitiesActivity.this, deleteActivityID);
 
                 Snackbar.make(findViewById(R.id.coordinator_layout), R.string.msg_snackbar, Snackbar.LENGTH_LONG).setCallback(new Snackbar.Callback() {
                     @Override
@@ -103,14 +98,14 @@ public class ClubActivitiesActivity extends ToolbarActivity implements ClubActiv
                                 // do nothing
                                 break;
                             case Snackbar.Callback.DISMISS_EVENT_TIMEOUT:
-
-                                ClubActivityService.startDeleteActivity(ClubActivitiesActivity.this, deleteActivityID);
+                                sendBroadcast(new Intent(TriggerPushToServerBroadcastReceiver.ACTION_TRIGGER));
                                 break;
                         }
                     }
                 }).setAction(R.string.undo, new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+                        ClubActivityService.startUnDeleteActivity(ClubActivitiesActivity.this, deleteActivityID);
                     }
                 }).show();
 
@@ -171,7 +166,12 @@ public class ClubActivitiesActivity extends ToolbarActivity implements ClubActiv
 
     @Override
     public void onClubActivityDeleted(final Long activity) {
-
+        ClubActivityService.startDeleteActivity(ClubActivitiesActivity.this, activity);
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction = getSupportFragmentManager().beginTransaction();
+        fragmentTransaction.replace(R.id.fragment_detail_container,new BlankFragment());
+        fragmentTransaction.commit();
         Snackbar.make(findViewById(R.id.coordinator_layout), R.string.msg_snackbar, Snackbar.LENGTH_LONG).setCallback(new Snackbar.Callback() {
             @Override
             public void onDismissed(Snackbar snackbar, int event) {
@@ -180,19 +180,14 @@ public class ClubActivitiesActivity extends ToolbarActivity implements ClubActiv
                         // do nothing
                         break;
                     case Snackbar.Callback.DISMISS_EVENT_TIMEOUT:
-
-                        ClubActivityService.startDeleteActivity(ClubActivitiesActivity.this, activity);
-                        FragmentManager fragmentManager = getSupportFragmentManager();
-                        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                        fragmentTransaction = getSupportFragmentManager().beginTransaction();
-                        fragmentTransaction.replace(R.id.fragment_detail_container,new BlankFragment());
-                        fragmentTransaction.commit();
+                        sendBroadcast(new Intent(TriggerPushToServerBroadcastReceiver.ACTION_TRIGGER));
                         break;
                 }
             }
         }).setAction(R.string.undo, new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                ClubActivityService.startUnDeleteActivity(ClubActivitiesActivity.this, activity);
             }
         }).show();
     }

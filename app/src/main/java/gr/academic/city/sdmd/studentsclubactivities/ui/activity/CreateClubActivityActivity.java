@@ -79,6 +79,7 @@ public class CreateClubActivityActivity extends ToolbarActivity implements OnMap
 
     private GoogleMap googleMap;
     private LatLng pointLocation;
+    private LatLng defaultPointLocation = new LatLng(40.6401,22.9444);
     private long clubServerId;
     private String addressString;
 
@@ -95,6 +96,8 @@ public class CreateClubActivityActivity extends ToolbarActivity implements OnMap
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(layout.activity_create_club_activity);
+
+        LatLng defaultPointLocation = new LatLng(40.6401,22.9444);
 
         MapFragment mapFragment = (MapFragment) getFragmentManager()
                 .findFragmentById(id.map);
@@ -136,6 +139,7 @@ public class CreateClubActivityActivity extends ToolbarActivity implements OnMap
         Date now = new Date();
         setupDate(now);
 
+
         tvDate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -150,6 +154,12 @@ public class CreateClubActivityActivity extends ToolbarActivity implements OnMap
     }
 
     private void saveNewClubActivity() {
+        //for test purposes, added as a default place
+        if (pointLocation==null){
+            pointLocation = defaultPointLocation;
+            addressString = getString(string.thessaloniki_city);
+        }
+
         ClubActivityService.startCreateClubActivity(this,
                 clubServerId,
                 txtTitle.getText().toString(),
