@@ -109,7 +109,7 @@ public class PushToServerService extends IntentService {
             final long clubActivityServerId = cursor.getLong(cursor.getColumnIndexOrThrow(ClubManagementContract.ClubActivity.COLUMN_NAME_SERVER_ID));
             final long clubServerId = cursor.getLong(cursor.getColumnIndexOrThrow(ClubManagementContract.ClubActivity.COLUMN_NAME_CLUB_SERVER_ID));
 
-            executeRequest(MessageFormat.format(Constants.DELETE_CLUB_ACTIVITIES_URL, clubServerId, clubActivityServerId),
+            executeRequest(MessageFormat.format(Constants.DELETE_CLUB_ACTIVITIES_URL, clubServerId, String.valueOf(clubActivityServerId)),
                     Commons.ConnectionMethod.DELETE,
                     null, new Commons.ResponseCallback() {
                         @Override
