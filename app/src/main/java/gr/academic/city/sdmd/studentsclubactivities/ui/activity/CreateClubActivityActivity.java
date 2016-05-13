@@ -3,8 +3,6 @@ package gr.academic.city.sdmd.studentsclubactivities.ui.activity;
 import android.app.DatePickerDialog;
 import android.content.Context;
 import android.content.Intent;
-import android.location.Address;
-import android.location.Geocoder;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 
@@ -18,6 +16,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.google.android.gms.appindexing.AppIndex;
+import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.Status;
 import com.google.android.gms.location.places.Place;
@@ -30,12 +29,11 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
-import java.io.IOException;
+
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.List;
-import java.util.Locale;
+
 
 import gr.academic.city.sdmd.studentsclubactivities.R;
 import gr.academic.city.sdmd.studentsclubactivities.service.ClubActivityService;
@@ -46,7 +44,7 @@ import static gr.academic.city.sdmd.studentsclubactivities.R.*;
 /**
  * Created by trumpets on 4/13/16.
  */
-public class CreateClubActivityActivity extends ToolbarActivity implements OnMapReadyCallback {
+public class CreateClubActivityActivity extends ToolbarActivity implements OnMapReadyCallback, GoogleApiClient.OnConnectionFailedListener {
 
 
     private static final String EXTRA_CLUB_SERVER_ID = "club_server_id";
@@ -137,6 +135,7 @@ public class CreateClubActivityActivity extends ToolbarActivity implements OnMap
         // ATTENTION: This was auto-generated to implement the App Indexing API.
         // See https://g.co/AppIndexing/AndroidStudio for more information.
         client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
+
     }
 
     private void saveNewClubActivity() {
@@ -221,43 +220,6 @@ public class CreateClubActivityActivity extends ToolbarActivity implements OnMap
         LatLng cityCollegeLocation = new LatLng(40.637679,22.9350098);
         googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(cityCollegeLocation, 13));
 
-        googleMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
-
-                                            @Override
-                                            public void onMapClick(LatLng point) {
-
-                                                Geocoder gc = new Geocoder(CreateClubActivityActivity.this, Locale.getDefault());
-
-                                                try {
-
-                                                    List<Address> addresses = gc.getFromLocation(point.latitude, point.longitude, 1);
-                                                    StringBuilder sb = new StringBuilder();
-
-                                                    if (addresses.size() > 0) {
-                                                        Address address = addresses.get(0);
-
-                                                        for (int i = 0; i < address.getMaxAddressLineIndex(); i++)
-                                                            sb.append(address.getAddressLine(i)).append("\n");
-
-                                                        sb.append(address.getCountryName());
-                                                    }
-                                                    addressString = sb.toString();
-                                                } catch (IOException e) {
-                                                }
-
-                                                if (addressString == null) {
-
-                                                    addressString = "No location found";
-                                                }
-
-
-                                                // Drawing marker on the map
-                                                drawMarker(point);
-
-                                            }
-                                        }
-
-        );
 
 
     }
@@ -276,7 +238,13 @@ public class CreateClubActivityActivity extends ToolbarActivity implements OnMap
 
         pointLocation = point;
 
+        googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(pointLocation, 10));
+
     }
 
+    @Override
+    public void onConnectionFailed(ConnectionResult connectionResult) {
+
+    }
 }
 
