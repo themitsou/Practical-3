@@ -25,7 +25,7 @@
         <FrameLayout
             android:id="@+id/fragment_detail_container"
             android:layout_width="match_parent"
-            android:layout_height="537dp" />
+            android:layout_height="match_parent" />
 
 
     </LinearLayout>
