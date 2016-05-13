@@ -2,41 +2,23 @@ package gr.academic.city.sdmd.studentsclubactivities.ui.activity;
 
 import android.content.Context;
 import android.content.Intent;
-import android.database.Cursor;
-import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v4.app.LoaderManager;
-import android.support.v4.content.CursorLoader;
-import android.support.v4.content.Loader;
-import android.support.v4.widget.CursorAdapter;
-import android.support.v4.widget.SimpleCursorAdapter;
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ListView;
-import android.widget.TextView;
-
-import java.text.SimpleDateFormat;
-import java.util.Date;
 
 import gr.academic.city.sdmd.studentsclubactivities.R;
-import gr.academic.city.sdmd.studentsclubactivities.db.ClubManagementContract;
 import gr.academic.city.sdmd.studentsclubactivities.receiver.TriggerPushToServerBroadcastReceiver;
 import gr.academic.city.sdmd.studentsclubactivities.service.ClubActivityService;
 import gr.academic.city.sdmd.studentsclubactivities.ui.activity.fragments.BlankFragment;
 import gr.academic.city.sdmd.studentsclubactivities.ui.activity.fragments.ClubActivitiesFragment;
 import gr.academic.city.sdmd.studentsclubactivities.ui.activity.fragments.ClubActivityDetailsFragment;
-import gr.academic.city.sdmd.studentsclubactivities.util.Constants;
 
 /**
  * Created by trumpets on 4/13/16.
@@ -180,6 +162,9 @@ public class ClubActivitiesActivity extends ToolbarActivity implements ClubActiv
                         // do nothing
                         break;
                     case Snackbar.Callback.DISMISS_EVENT_TIMEOUT:
+                        sendBroadcast(new Intent(TriggerPushToServerBroadcastReceiver.ACTION_TRIGGER));
+                        break;
+                    default:
                         sendBroadcast(new Intent(TriggerPushToServerBroadcastReceiver.ACTION_TRIGGER));
                         break;
                 }

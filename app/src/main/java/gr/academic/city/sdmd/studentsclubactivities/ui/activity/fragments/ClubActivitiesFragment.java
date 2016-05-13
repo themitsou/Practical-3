@@ -2,10 +2,8 @@ package gr.academic.city.sdmd.studentsclubactivities.ui.activity.fragments;
 
 import android.content.Context;
 import android.database.Cursor;
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
@@ -27,18 +25,9 @@ import java.util.Date;
 import gr.academic.city.sdmd.studentsclubactivities.R;
 import gr.academic.city.sdmd.studentsclubactivities.db.ClubManagementContract;
 import gr.academic.city.sdmd.studentsclubactivities.service.ClubActivityService;
-import gr.academic.city.sdmd.studentsclubactivities.ui.activity.ClubActivityDetailsActivity;
 import gr.academic.city.sdmd.studentsclubactivities.util.Constants;
 
-/**
- * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * {@link ClubActivitiesFragment.OnListFragmentInteractionListener} interface
- * to handle interaction events.
- * Use the {@link ClubActivitiesFragment#newInstance} factory method to
- * create an instance of this fragment.
- *
- */
+
 public class ClubActivitiesFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener, LoaderManager.LoaderCallbacks<Cursor> {
 
     public interface OnListFragmentInteractionListener {

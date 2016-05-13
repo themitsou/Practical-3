@@ -25,13 +25,12 @@ import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
+import static org.hamcrest.Matchers.anything;
 import static org.hamcrest.core.AllOf.allOf;
 import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.IsInstanceOf.instanceOf;
 
-/**
- * Created by trumpets on 4/14/16.
- */
+
 @RunWith(AndroidJUnit4.class)
 @LargeTest
 public class ActivitiesDetailsTest {
@@ -46,13 +45,21 @@ public class ActivitiesDetailsTest {
 
         onView((withId(R.id.swipe_refresh))).perform(swipeDown());
 
-        onView(allOf(withId(R.id.tv_club_name), withText(clubName))).perform(click()) ;
+        onData(anything())
+                .inAdapterView(withId(R.id.list)).atPosition(0)
+                .perform(click());
+
+//        onView(allOf(withId(R.id.tv_club_name), withText(clubName))).perform(click()) ;
 
         onView((withId(R.id.swipe_refresh))).perform(swipeDown());
 
-        onView(allOf(withId(R.id.tv_club_activity_title), withText(activityTitle))).perform(click()) ;
+        onData(anything())
+                .inAdapterView(withId(android.R.id.list)).atPosition(0)
+                .perform(click());
 
-        onView(withId(R.id.tv_club_activity_title)).check(matches(is(withText(activityTitle))));
+//        onView(allOf(withId(R.id.tv_club_activity_title), withText(activityTitle))).perform(click()) ;
+
+        onView(withId(R.id.tv_club_activity_title)).check(matches(isDisplayed())); // (matches(is(withText(activityTitle))));
 
     }
 }

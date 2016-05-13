@@ -38,4 +38,8 @@ public class Club {
     public long getServerId() {
         return serverId;
     }
+
+    public String toString() {
+        return name;
+    }
 }

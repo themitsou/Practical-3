@@ -4,13 +4,11 @@ import android.content.ContentUris;
 import android.content.Context;
 import android.database.Cursor;
 import android.os.Bundle;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
-import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -18,13 +16,10 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 
-import com.google.android.gms.maps.MapFragment;
-import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
@@ -35,7 +30,6 @@ import java.util.Date;
 
 import gr.academic.city.sdmd.studentsclubactivities.R;
 import gr.academic.city.sdmd.studentsclubactivities.db.ClubManagementContract;
-import gr.academic.city.sdmd.studentsclubactivities.service.ClubActivityService;
 import gr.academic.city.sdmd.studentsclubactivities.util.Constants;
 
 public class ClubActivityDetailsFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> , OnMapReadyCallback {
