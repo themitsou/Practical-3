@@ -77,7 +77,7 @@ public class ClubActivitiesActivity extends ToolbarActivity implements ClubActiv
                     public void onDismissed(Snackbar snackbar, int event) {
                         switch (event) {
                             case Snackbar.Callback.DISMISS_EVENT_ACTION:
-                                // do nothing
+                                // do nothing //
                                 break;
                             case Snackbar.Callback.DISMISS_EVENT_TIMEOUT:
                                 sendBroadcast(new Intent(TriggerPushToServerBroadcastReceiver.ACTION_TRIGGER));
