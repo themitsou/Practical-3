@@ -71,15 +71,13 @@ public class ClubActivitiesFragment extends Fragment implements SwipeRefreshLayo
 
 
     public static ClubActivitiesFragment newInstance(Long param1) {
-        ClubActivitiesFragment fragment = new ClubActivitiesFragment(param1);
+        ClubActivitiesFragment fragment = new ClubActivitiesFragment();
         Bundle args = new Bundle();
         args.putLong(ARG_PARAM1, param1);
         fragment.setArguments(args);
         return fragment;
     }
-    public ClubActivitiesFragment(long clubServerId) {
-        // Required empty public constructor
-    }
+
 
     public ClubActivitiesFragment() {
         // Required empty public constructor

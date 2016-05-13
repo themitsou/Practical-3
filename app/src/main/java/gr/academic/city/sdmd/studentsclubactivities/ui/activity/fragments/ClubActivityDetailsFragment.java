@@ -68,16 +68,14 @@ public class ClubActivityDetailsFragment extends Fragment implements LoaderManag
 
 
     public static ClubActivityDetailsFragment newInstance(Long param1) {
-        ClubActivityDetailsFragment fragment = new ClubActivityDetailsFragment(param1);
+        ClubActivityDetailsFragment fragment = new ClubActivityDetailsFragment();
         Bundle args = new Bundle();
         args.putLong(ARG_PARAM1, param1);
         fragment.setArguments(args);
         return fragment;
     }
 
-    public ClubActivityDetailsFragment(long clubActivityId) {
-        // Required empty public constructor
-    }
+
 
 
     @Override
