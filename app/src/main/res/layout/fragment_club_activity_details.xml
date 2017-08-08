@@ -49,14 +49,5 @@
         tools:text="Long note goes here. It is very long possible spanning multiple rows."
         android:layout_margin="10dp" />
 
-    <fragment
-        android:id="@+id/map"
-        android:name="com.google.android.gms.maps.SupportMapFragment"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_alignParentBottom="true"
-        android:layout_below="@+id/tv_club_activity_long_note"
-        android:layout_margin="10dp" />
-
 
 </RelativeLayout>

@@ -1,7 +1,7 @@
 <resources>
-    <string name="app_name">StudentsClubActivities</string>
-    <string name="msg_no_clubs">There are no clubs to show right now. Refresh.</string>
-    <string name="msg_no_clubs_activities">There are no club activities to show right now. Refresh.</string>
+    <string name="app_name">ProjectIssues</string>
+    <string name="msg_no_clubs">There are no projects to show right now. Refresh.</string>
+    <string name="msg_no_clubs_activities">There are no project issues to show right now. Refresh.</string>
     <string name="add_activity">Add Activity</string>
     <string name="title">Title</string>
     <string name="short_note">Short Note</string>

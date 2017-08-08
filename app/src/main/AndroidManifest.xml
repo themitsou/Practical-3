@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="gr.academic.city.sdmd.studentsclubactivities">
+    package="gr.academic.city.sdmd.projectissues">
 
     <uses-feature
         android:glEsVersion="0x00020000"
@@ -23,7 +23,7 @@
         android:theme="@style/AppTheme">
 
         <activity
-            android:name=".ui.activity.MainActivity">
+            android:name="gr.academic.city.sdmd.projectissues.ui.activity.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -31,49 +31,49 @@
         </activity>
 
         <activity
-            android:name=".ui.activity.ClubActivitiesActivity"
-            android:parentActivityName="gr.academic.city.sdmd.studentsclubactivities.ui.activity.MainActivity"
+            android:name="gr.academic.city.sdmd.projectissues.ui.activity.ClubActivitiesActivity"
+            android:parentActivityName="gr.academic.city.sdmd.projectissues.ui.activity.MainActivity"
             android:launchMode="singleTop">
             <!-- Parent activity meta-data to support 4.0 and lower -->
 
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="gr.academic.city.sdmd.studentsclubactivities.ui.activity.MainActivity" />
+                android:value="gr.academic.city.sdmd.projectissues.ui.activity.MainActivity" />
         </activity>
 
         <activity
-            android:name=".ui.activity.CreateClubActivityActivity"
-            android:parentActivityName="gr.academic.city.sdmd.studentsclubactivities.ui.activity.ClubActivitiesActivity">
+            android:name="gr.academic.city.sdmd.projectissues.ui.activity.CreateClubActivityActivity"
+            android:parentActivityName="gr.academic.city.sdmd.projectissues.ui.activity.ClubActivitiesActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="gr.academic.city.sdmd.studentsclubactivities.ui.activity.ClubActivitiesActivity" />
+                android:value="gr.academic.city.sdmd.projectissues.ui.activity.ClubActivitiesActivity" />
         </activity>
 
         <activity
-            android:name=".ui.activity.ClubActivityDetailsActivity"
-            android:parentActivityName="gr.academic.city.sdmd.studentsclubactivities.ui.activity.ClubActivitiesActivity"
+            android:name="gr.academic.city.sdmd.projectissues.ui.activity.ClubActivityDetailsActivity"
+            android:parentActivityName="gr.academic.city.sdmd.projectissues.ui.activity.ClubActivitiesActivity"
            >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="gr.academic.city.sdmd.studentsclubactivities.ui.activity.ClubActivitiesActivity" />
+                android:value="gr.academic.city.sdmd.projectissues.ui.activity.ClubActivitiesActivity" />
         </activity>
 
         <service
-            android:name=".service.ClubService"
+            android:name="gr.academic.city.sdmd.projectissues.service.ProjectService"
             android:enabled="true"
             android:exported="false" />
 
         <service
-            android:name=".service.ClubActivityService"
+            android:name="gr.academic.city.sdmd.projectissues.service.ProjectIssueService"
             android:enabled="true"
             android:exported="false" />
 
         <service
-            android:name=".service.PushToServerService"
+            android:name="gr.academic.city.sdmd.projectissues.service.PushToServerService"
             android:enabled="true"
             android:exported="false" />
 
-        <receiver android:name=".receiver.TriggerPushToServerBroadcastReceiver">
+        <receiver android:name="gr.academic.city.sdmd.projectissues.receiver.TriggerPushToServerBroadcastReceiver">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>
@@ -86,14 +86,14 @@
         </receiver>
 
         <provider
-            android:name=".db.ClubManagementContentProvider"
-            android:authorities="gr.academic.city.sdsm.studentsclubactivities"
+            android:name=".db.ProjectManagementContentProvider"
+            android:authorities="gr.academic.city.sdsm.projectissues"
             android:enabled="true"
             android:exported="false" />
 
         <meta-data
             android:name="com.google.android.gms.version"
-            android:value="@integer/google_play_services_version" />
+            android:value="11.0.2" />
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"

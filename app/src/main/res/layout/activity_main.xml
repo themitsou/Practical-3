@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="gr.academic.city.sdmd.studentsclubactivities.ui.activity.MainActivity">
+    tools:context="gr.academic.city.sdmd.projectissues.ui.activity.MainActivity">
 
     <include layout="@layout/layout_toolbar"
         android:id="@+id/toolbar" />

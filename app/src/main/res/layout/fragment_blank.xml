@@ -2,7 +2,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="gr.academic.city.sdmd.studentsclubactivities.ui.activity.fragments.BlankFragment">
+    tools:context="gr.academic.city.sdmd.projectissues.ui.activity.fragments.BlankFragment">
 
     <!-- TODO: Update blank fragment layout -->
     <TextView
