@@ -49,5 +49,28 @@
         tools:text="Long note goes here. It is very long possible spanning multiple rows."
         android:layout_margin="10dp" />
 
+    <ProgressBar
+        android:id="@+id/progressBar"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_below="@id/tv_club_activity_long_note"
+        android:layout_width="match_parent"
+        android:layout_height="300dp"
+
+        android:layout_centerHorizontal="true"
+        android:max="1000"
+        android:progress="0"
+        android:progressDrawable="@drawable/circular" />
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/floatingActionButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignEnd="@+id/tv_club_activity_long_note"
+        android:layout_alignParentBottom="true"
+        android:layout_alignRight="@+id/tv_club_activity_long_note"
+        android:layout_marginBottom="14dp"
+        android:clickable="true"
+        android:visibility="visible"
+        android:src="@android:drawable/ic_media_play" />
 
 </RelativeLayout>
