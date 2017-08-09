@@ -23,6 +23,7 @@
     <string name="city_name">CITY College, the International Faculty of the University of Sheffield, Leontos Sofou, Thessaloniki</string>
     <string name="msg_snackbar">One Activity Deleted!</string>
     <string name="undo">UNDO</string>
+    <string name="progress_message">Let\'\ s put some effort on that ;)</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>

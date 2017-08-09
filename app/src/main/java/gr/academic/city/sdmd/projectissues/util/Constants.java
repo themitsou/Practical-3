@@ -12,6 +12,7 @@ public final class Constants {
     public static final String PROJECT_ISSUES_URL = SERVER_URL + "issues.json?project_id={0}";
     public static final String PROJECT_ISSUE_URL = SERVER_URL + "issues.json";
     public static final String DELETE_PROJECT_ISSUES_URL = SERVER_URL + "issues/{0}.json";
+    public static final String TIME_ENTRIES_URL = SERVER_URL + "time_entries.json";
 
-    public static final String PROJECT_ISSUES_DATE_FORMAT = "dd/MM/yyyy";
+    public static final String PROJECT_ISSUES_DATE_FORMAT = "MM/dd/yyyy";
 }

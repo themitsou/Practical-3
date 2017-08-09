@@ -5,6 +5,7 @@ import android.content.ContentUris;
 import android.content.Context;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -24,6 +25,7 @@ import android.widget.TextView;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.concurrent.TimeUnit;
 
 import gr.academic.city.sdmd.projectissues.R;
 import gr.academic.city.sdmd.projectissues.db.ProjectManagementContract;
@@ -46,6 +48,79 @@ public class ClubActivityDetailsFragment extends Fragment implements LoaderManag
     private TextView tvShortNote;
     private TextView tvLongNote;
     private TextView tvDate;
+    private TextView tvProgress;
+
+    private ProgressBar progressBar;
+    private ObjectAnimator animation;
+    private int pomodori = 0;
+    private boolean timeForShortBrake=false;
+    private boolean timeForLongBrake=false;
+
+    CountDownTimer mCountDownWorkTimer = new CountDownTimer(2 * 1000, 1000) {
+        @Override
+        public void onTick(long millisUntilFinished) {
+            //this will be called every second.
+            tvProgress.setText("" + String.format("%d : %d ",
+                    TimeUnit.MILLISECONDS.toMinutes(millisUntilFinished),
+                    TimeUnit.MILLISECONDS.toSeconds(millisUntilFinished) -
+                            TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(millisUntilFinished))));
+
+        }
+
+        @Override
+        public void onFinish() {
+            if (pomodori < 4) {
+                pomodori++;
+                timeForShortBrake = true;
+                mCountDownShortBrakeTimer.start();
+                startAnimation(2 * 1000);
+            } else {
+                pomodori = 0;
+                timeForLongBrake = true;
+                mCountDownLongBrakeTimer.start();
+                startAnimation(2 * 1000);
+            }
+        }
+    };
+
+    CountDownTimer mCountDownLongBrakeTimer = new CountDownTimer(2 * 1000, 1000) {
+        @Override
+        public void onTick(long millisUntilFinished) {
+            //this will be called every second.
+            tvProgress.setText("" + String.format("Let's have a long brake for %d : %d ",
+                    TimeUnit.MILLISECONDS.toMinutes(millisUntilFinished),
+                    TimeUnit.MILLISECONDS.toSeconds(millisUntilFinished) -
+                            TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(millisUntilFinished))));
+
+        }
+
+        @Override
+        public void onFinish() {
+            timeForLongBrake = false;
+            mCountDownWorkTimer.start();
+            startAnimation(2 * 1000);
+        }
+    };
+
+    CountDownTimer mCountDownShortBrakeTimer = new CountDownTimer(2 * 1000, 1000) {
+        @Override
+        public void onTick(long millisUntilFinished) {
+            //this will be called every second.
+            tvProgress.setText("" + String.format("Let's have a short brake for %d : %d ",
+                    TimeUnit.MILLISECONDS.toMinutes(millisUntilFinished),
+                    TimeUnit.MILLISECONDS.toSeconds(millisUntilFinished) -
+                            TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(millisUntilFinished))));
+
+        }
+
+        @Override
+        public void onFinish() {
+            timeForShortBrake = false;
+            mCountDownWorkTimer.start();
+            startAnimation(2* 1000);
+        }
+    };
+
 
     private View view;
     private Long mParam1;
@@ -88,21 +163,24 @@ public class ClubActivityDetailsFragment extends Fragment implements LoaderManag
         tvLongNote = (TextView) view.findViewById(R.id.tv_club_activity_long_note);
         tvDate = (TextView) view.findViewById(R.id.tv_club_activity_date);
 
-        final ProgressBar progressBar = (ProgressBar) view.findViewById(R.id.progressBar);
-        final ObjectAnimator animation = ObjectAnimator.ofInt(progressBar, "progress", 1000, 0); // see this max value coming back here, we animate towards that value
-
+        tvProgress = (TextView) view.findViewById(R.id.tv_progressText);
+        progressBar = (ProgressBar) view.findViewById(R.id.progressBar);
+        animation = ObjectAnimator.ofInt(progressBar, "progress", 1000, 0);
 
         final FloatingActionButton myFab = (FloatingActionButton) view.findViewById(R.id.floatingActionButton);
         myFab.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 if (animation.isRunning()) {
-                    animation.end();
                     myFab.setImageResource(android.R.drawable.ic_media_play);
-                }else{
-                    animation.setDuration(1500000); //in milliseconds
-                    animation.setInterpolator(new DecelerateInterpolator());
-                    animation.start();
+                    animation.end();
+                    mCountDownWorkTimer.cancel();
+                    mCountDownShortBrakeTimer.cancel();
+                    mCountDownLongBrakeTimer.cancel();
+                    tvProgress.setText(R.string.progress_message);
+                } else {
+                    startAnimation(2*1000); //in milliseconds
                     myFab.setImageResource(android.R.drawable.checkbox_off_background);
+                    mCountDownWorkTimer.start();
                 }
 
             }
@@ -167,7 +245,6 @@ public class ClubActivityDetailsFragment extends Fragment implements LoaderManag
             tvLongNote.setText(cursor.getString(cursor.getColumnIndexOrThrow(ProjectManagementContract.ProjectIssue.COLUMN_NAME_LONG_NOTE)));
             tvDate.setText(dateFormat.format(new Date(cursor.getLong(cursor.getColumnIndexOrThrow(ProjectManagementContract.ProjectIssue.COLUMN_NAME_TIMESTAMP)))));
 
-
         }
 
         if (cursor != null) {
@@ -192,4 +269,10 @@ public class ClubActivityDetailsFragment extends Fragment implements LoaderManag
         }
     }
 
+    public void startAnimation(long duration) {
+        animation.end();
+        animation.setDuration(duration); //in milliseconds
+        animation.setInterpolator(new DecelerateInterpolator());
+        animation.start();
+    }
 }
