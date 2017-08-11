@@ -3,6 +3,7 @@ package gr.academic.city.sdmd.projectissues.ui.activity.fragments;
 import android.animation.ObjectAnimator;
 import android.content.ContentUris;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.os.CountDownTimer;
@@ -12,6 +13,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
+import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -19,6 +21,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.DecelerateInterpolator;
+import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -29,6 +32,7 @@ import java.util.concurrent.TimeUnit;
 
 import gr.academic.city.sdmd.projectissues.R;
 import gr.academic.city.sdmd.projectissues.db.ProjectManagementContract;
+import gr.academic.city.sdmd.projectissues.service.WorkLogService;
 import gr.academic.city.sdmd.projectissues.util.Constants;
 
 public class ClubActivityDetailsFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
@@ -49,12 +53,15 @@ public class ClubActivityDetailsFragment extends Fragment implements LoaderManag
     private TextView tvLongNote;
     private TextView tvDate;
     private TextView tvProgress;
+    private Long serverIssueID;
+    private String comment;
+    private Long workhours;
 
     private ProgressBar progressBar;
     private ObjectAnimator animation;
     private int pomodori = 0;
-    private boolean timeForShortBrake=false;
-    private boolean timeForLongBrake=false;
+    private boolean timeForShortBrake = false;
+    private boolean timeForLongBrake = false;
 
     CountDownTimer mCountDownWorkTimer = new CountDownTimer(2 * 1000, 1000) {
         @Override
@@ -69,17 +76,7 @@ public class ClubActivityDetailsFragment extends Fragment implements LoaderManag
 
         @Override
         public void onFinish() {
-            if (pomodori < 4) {
-                pomodori++;
-                timeForShortBrake = true;
-                mCountDownShortBrakeTimer.start();
-                startAnimation(2 * 1000);
-            } else {
-                pomodori = 0;
-                timeForLongBrake = true;
-                mCountDownLongBrakeTimer.start();
-                startAnimation(2 * 1000);
-            }
+            insertIssueComment();
         }
     };
 
@@ -117,7 +114,7 @@ public class ClubActivityDetailsFragment extends Fragment implements LoaderManag
         public void onFinish() {
             timeForShortBrake = false;
             mCountDownWorkTimer.start();
-            startAnimation(2* 1000);
+            startAnimation(2 * 1000);
         }
     };
 
@@ -178,7 +175,7 @@ public class ClubActivityDetailsFragment extends Fragment implements LoaderManag
                     mCountDownLongBrakeTimer.cancel();
                     tvProgress.setText(R.string.progress_message);
                 } else {
-                    startAnimation(2*1000); //in milliseconds
+                    startAnimation(2 * 1000); //in milliseconds
                     myFab.setImageResource(android.R.drawable.checkbox_off_background);
                     mCountDownWorkTimer.start();
                 }
@@ -244,7 +241,7 @@ public class ClubActivityDetailsFragment extends Fragment implements LoaderManag
             tvShortNote.setText(cursor.getString(cursor.getColumnIndexOrThrow(ProjectManagementContract.ProjectIssue.COLUMN_NAME_SHORT_NOTE)));
             tvLongNote.setText(cursor.getString(cursor.getColumnIndexOrThrow(ProjectManagementContract.ProjectIssue.COLUMN_NAME_LONG_NOTE)));
             tvDate.setText(dateFormat.format(new Date(cursor.getLong(cursor.getColumnIndexOrThrow(ProjectManagementContract.ProjectIssue.COLUMN_NAME_TIMESTAMP)))));
-
+            serverIssueID=cursor.getLong(cursor.getColumnIndexOrThrow(ProjectManagementContract.ProjectIssue.COLUMN_NAME_SERVER_ID));
         }
 
         if (cursor != null) {
@@ -274,5 +271,64 @@ public class ClubActivityDetailsFragment extends Fragment implements LoaderManag
         animation.setDuration(duration); //in milliseconds
         animation.setInterpolator(new DecelerateInterpolator());
         animation.start();
+    }
+
+    public void continueWork() {
+        if (pomodori < 4) {
+            pomodori++;
+            timeForShortBrake = true;
+            mCountDownShortBrakeTimer.start();
+            startAnimation(2 * 1000);
+        } else {
+            pomodori = 0;
+            timeForLongBrake = true;
+            mCountDownLongBrakeTimer.start();
+            startAnimation(2 * 1000);
+        }
+    }
+
+    private void insertIssueComment() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+        builder.setTitle("Great job my friend!");
+        // I'm using fragment here so I'm using getView() to provide ViewGroup
+        // but you can provide here any other instance of ViewGroup from your Fragment / Activity
+        View viewInflated = LayoutInflater.from(getContext()).inflate(R.layout.input_issue_comment, (ViewGroup) getView(), false);
+        // Set up the input
+        final EditText inputComment = (EditText) viewInflated.findViewById(R.id.input_comment);
+//        final EditText inputWorkHours = (EditText) viewInflated.findViewById(R.id.input_work_hours);
+        // Specify the type of input expected; this, for example, sets the input as a password, and will mask the text
+        builder.setView(viewInflated);
+
+        // Set up the buttons
+        builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                comment = inputComment.getText().toString();
+                workhours = 1L;//Long.valueOf(inputWorkHours.getText().toString());
+                saveNewWorkLog();
+                dialog.dismiss();
+               // continueWork();
+            }
+        });
+        builder.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.cancel();
+                continueWork();
+            }
+        });
+
+        builder.show();
+    }
+
+    private void saveNewWorkLog() {
+        //for test purposes, added as a default place
+
+
+        WorkLogService.startCreateWorkLog(this.getContext(),
+                serverIssueID,
+                comment,
+                workhours);
+
     }
 }

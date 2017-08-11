@@ -25,12 +25,18 @@ public class ProjectManagementContentProvider extends ContentProvider {
     private static final int ISSUES = 11;
     private static final int ISSUE_ITEM = 12;
 
+    private static final int WORK_LOGS = 21;
+    private static final int WORK_LOG_ITEM = 22;
+
     static {
         uriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
         uriMatcher.addURI(ProjectManagementContract.AUTHORITY, ProjectManagementContract.Project.TABLE_NAME, PROJECTS);
         uriMatcher.addURI(ProjectManagementContract.AUTHORITY, ProjectManagementContract.Project.TABLE_NAME + "/#", PROJECT_ITEM);
         uriMatcher.addURI(ProjectManagementContract.AUTHORITY, ProjectManagementContract.ProjectIssue.TABLE_NAME, ISSUES);
         uriMatcher.addURI(ProjectManagementContract.AUTHORITY, ProjectManagementContract.ProjectIssue.TABLE_NAME + "/#", ISSUE_ITEM);
+        uriMatcher.addURI(ProjectManagementContract.AUTHORITY, ProjectManagementContract.WorkLog.TABLE_NAME, WORK_LOGS);
+        uriMatcher.addURI(ProjectManagementContract.AUTHORITY, ProjectManagementContract.WorkLog.TABLE_NAME + "/#", WORK_LOG_ITEM);
+
     }
 
     private SQLiteOpenHelper dbHelper;
@@ -57,6 +63,11 @@ public class ProjectManagementContentProvider extends ContentProvider {
             case ISSUES:
                 tableName = ProjectManagementContract.ProjectIssue.TABLE_NAME;
                 break;
+            case WORK_LOG_ITEM:
+                selection = ProjectManagementContract.WorkLog._ID + "=" + uri.getLastPathSegment();
+            case WORK_LOGS:
+                tableName = ProjectManagementContract.WorkLog.TABLE_NAME;
+                break;
             default:
                 throw new IllegalArgumentException("Unknown URI " + uri);
         }
@@ -74,7 +85,7 @@ public class ProjectManagementContentProvider extends ContentProvider {
     @Nullable
     @Override
     public Uri insert(Uri uri, ContentValues values) {
-        if (uriMatcher.match(uri) != PROJECTS && uriMatcher.match(uri) != ISSUES) {
+        if (uriMatcher.match(uri) != PROJECTS && uriMatcher.match(uri) != ISSUES && uriMatcher.match(uri) != WORK_LOGS) {
             throw new IllegalArgumentException("Unknown URI " + uri);
         }
 
@@ -89,6 +100,10 @@ public class ProjectManagementContentProvider extends ContentProvider {
             case ISSUES:
                 contentUri = ProjectManagementContract.ProjectIssue.CONTENT_URI;
                 tableName = ProjectManagementContract.ProjectIssue.TABLE_NAME;
+                break;
+            case WORK_LOGS:
+                contentUri = ProjectManagementContract.WorkLog.CONTENT_URI;
+                tableName = ProjectManagementContract.WorkLog.TABLE_NAME;
                 break;
             default:
                 throw new IllegalArgumentException("Unknown URI " + uri);
@@ -125,6 +140,11 @@ public class ProjectManagementContentProvider extends ContentProvider {
             case ISSUES:
                 tableName = ProjectManagementContract.ProjectIssue.TABLE_NAME;
                 break;
+            case WORK_LOG_ITEM:
+                selection = ProjectManagementContract.WorkLog._ID + "=" + uri.getLastPathSegment();
+            case WORK_LOGS:
+                tableName = ProjectManagementContract.WorkLog.TABLE_NAME;
+                break;
             default:
                 throw new IllegalArgumentException("Unknown URI " + uri);
         }
@@ -152,6 +172,11 @@ public class ProjectManagementContentProvider extends ContentProvider {
                 selection = ProjectManagementContract.ProjectIssue._ID + "=" + uri.getLastPathSegment();
             case ISSUES:
                 tableName = ProjectManagementContract.ProjectIssue.TABLE_NAME;
+                break;
+            case WORK_LOG_ITEM:
+                selection = ProjectManagementContract.WorkLog._ID + "=" + uri.getLastPathSegment();
+            case WORK_LOGS:
+                tableName = ProjectManagementContract.WorkLog.TABLE_NAME;
                 break;
             default:
                 throw new IllegalArgumentException("Unknown URI " + uri);
@@ -183,6 +208,12 @@ public class ProjectManagementContentProvider extends ContentProvider {
                 subType = "vnd.android.cursor.item/";
             case ISSUES:
                 tableName = ProjectManagementContract.ProjectIssue.TABLE_NAME;
+                subType = "vnd.android.cursor.dir/";
+                break;
+            case WORK_LOG_ITEM:
+                subType = "vnd.android.cursor.item/";
+            case WORK_LOGS:
+                tableName = ProjectManagementContract.WorkLog.TABLE_NAME;
                 subType = "vnd.android.cursor.dir/";
                 break;
             default:

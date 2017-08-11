@@ -40,11 +40,25 @@ public class ProjectManagementDBHelper extends SQLiteOpenHelper {
                     ProjectManagementContract.ProjectIssue.COLUMN_NAME_FOR_DELETION + SHORT_TYPE + DEFAULT_0 +
                     " )";
 
+    private static final String SQL_CREATE_WORK_LOGS =
+            "CREATE TABLE " + ProjectManagementContract.WorkLog.TABLE_NAME + " (" +
+                    ProjectManagementContract.WorkLog._ID + INT_TYPE + " PRIMARY KEY AUTOINCREMENT," +
+                    ProjectManagementContract.WorkLog.COLUMN_NAME_ISSUE_SERVER_ID + INT_TYPE + COMMA_SEP +
+                    ProjectManagementContract.WorkLog.COLUMN_NAME_SERVER_ID + INT_TYPE + COMMA_SEP +
+                    ProjectManagementContract.WorkLog.COLUMN_NAME_COMMENT + TEXT_TYPE + COMMA_SEP +
+                    ProjectManagementContract.WorkLog.COLUMN_NAME_WORK_HOURS + INT_TYPE + COMMA_SEP +
+                    ProjectManagementContract.WorkLog.COLUMN_NAME_UPLOADED_TO_SERVER + SHORT_TYPE + COMMA_SEP +
+                    ProjectManagementContract.WorkLog.COLUMN_NAME_FOR_DELETION + SHORT_TYPE + DEFAULT_0 +
+                    " )";
+
     private static final String SQL_DELETE_PROJECTS =
             "DROP TABLE IF EXISTS " + ProjectManagementContract.Project.TABLE_NAME;
 
     private static final String SQL_DELETE_PROJECT_ISSUES =
             "DROP TABLE IF EXISTS " + ProjectManagementContract.ProjectIssue.TABLE_NAME;
+
+    private static final String SQL_DELETE_WORK_LOGS =
+            "DROP TABLE IF EXISTS " + ProjectManagementContract.WorkLog.TABLE_NAME;
 
     public ProjectManagementDBHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -53,6 +67,7 @@ public class ProjectManagementDBHelper extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db) {
         db.execSQL(SQL_CREATE_PROJECTS);
         db.execSQL(SQL_CREATE_PROJECT_ISSUES);
+        db.execSQL(SQL_CREATE_WORK_LOGS);
     }
 
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
@@ -63,6 +78,7 @@ public class ProjectManagementDBHelper extends SQLiteOpenHelper {
         // However, that is not the scope of this coursework
         db.execSQL(SQL_DELETE_PROJECTS);
         db.execSQL(SQL_DELETE_PROJECT_ISSUES);
+        db.execSQL(SQL_DELETE_WORK_LOGS);
         onCreate(db);
     }
 

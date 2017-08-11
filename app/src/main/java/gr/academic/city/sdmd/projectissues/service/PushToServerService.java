@@ -21,6 +21,8 @@ import java.text.MessageFormat;
 import gr.academic.city.sdmd.projectissues.R;
 import gr.academic.city.sdmd.projectissues.db.ProjectManagementContract;
 import gr.academic.city.sdmd.projectissues.domain.Issue;
+import gr.academic.city.sdmd.projectissues.domain.MasterWorkLogToSend;
+import gr.academic.city.sdmd.projectissues.domain.WorkLogToSend;
 import gr.academic.city.sdmd.projectissues.ui.activity.ClubActivitiesActivity;
 import gr.academic.city.sdmd.projectissues.ui.activity.ClubActivityDetailsActivity;
 import gr.academic.city.sdmd.projectissues.util.Commons;
@@ -55,6 +57,7 @@ public class PushToServerService extends IntentService {
         if (ACTION_PUSH_PROJECT_ISSUES_TO_SERVER.equals(intent.getAction())) {
             pushActivitiesToServer();
             deleteActivitiesToServer();
+            pushWorkLogsToServer();
         }
     }
 
@@ -137,6 +140,51 @@ public class PushToServerService extends IntentService {
         cursor.close();
     }
 
+    private void pushWorkLogsToServer() {
+        Cursor cursor = getContentResolver().query(
+                ProjectManagementContract.WorkLog.CONTENT_URI,
+                null,
+                ProjectManagementContract.WorkLog.COLUMN_NAME_UPLOADED_TO_SERVER + " = ?",
+                new String[]{String.valueOf(0)},
+                null);
+
+        while (cursor.moveToNext()) {
+            final long WorklogDbId = cursor.getLong(cursor.getColumnIndexOrThrow(ProjectManagementContract.WorkLog._ID));
+            long issueServerId = cursor.getLong(cursor.getColumnIndexOrThrow(ProjectManagementContract.WorkLog.COLUMN_NAME_ISSUE_SERVER_ID));
+            String comment = cursor.getString(cursor.getColumnIndexOrThrow(ProjectManagementContract.WorkLog.COLUMN_NAME_COMMENT));
+            long hours = cursor.getLong(cursor.getColumnIndexOrThrow(ProjectManagementContract.WorkLog.COLUMN_NAME_WORK_HOURS));
+
+            executeRequest(Constants.WORK_LOGS_URL, Commons.ConnectionMethod.POST, new Gson().toJson(new MasterWorkLogToSend((new WorkLogToSend(issueServerId, hours, comment)))), new Commons.ResponseCallback() {
+                @Override
+                public void onResponse(int responseCode, String responsePayload) {
+                    String serverID ="-1";
+                    try {
+                        JSONObject json = new JSONObject(responsePayload);
+                        serverID = json.getJSONObject("time_entry").getString("id");
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                    // responsePayload is the new ID of this club activity on the server
+
+                    ContentValues contentValues = new ContentValues();
+                    contentValues.put(ProjectManagementContract.WorkLog.COLUMN_NAME_UPLOADED_TO_SERVER, 1);
+                    contentValues.put(ProjectManagementContract.WorkLog.COLUMN_NAME_SERVER_ID, serverID);
+
+                    getContentResolver().update(
+                            ContentUris.withAppendedId(ProjectManagementContract.WorkLog.CONTENT_URI, WorklogDbId),
+                            contentValues,
+                            null,
+                            null
+                    );
+
+                    showWorkLogNotification(WorklogDbId);
+                }
+            });
+        }
+
+        cursor.close();
+    }
+
     private void showNotification(long clubActivityId) {
         PendingIntent contentIntent = PendingIntent.getActivity(this, 0, ClubActivityDetailsActivity.getStartIntent(this, clubActivityId), PendingIntent.FLAG_UPDATE_CURRENT);
 
@@ -172,6 +220,28 @@ public class PushToServerService extends IntentService {
                 .setContentTitle(getString(R.string.activity_deleted))
                 .setContentText(text)
                 .setContentIntent(contentIntent)
+                .setAutoCancel(true)
+                .build();
+
+        NotificationManager mNotificationManager =
+                (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+
+        // NOTIFICATION_ID allows you to update the notification later on.
+        mNotificationManager.notify(NOTIFICATION_ID, notification);
+    }
+
+    private void showWorkLogNotification(long workLogId) {
+       // PendingIntent contentIntent = PendingIntent.getActivity(this, 0, ClubActivityDetailsActivity.getStartIntent(this, clubActivityId), PendingIntent.FLAG_UPDATE_CURRENT);
+
+        String text = getString(R.string.msg_work_log_uploaded);
+
+        Notification notification = new NotificationCompat.Builder(this)
+                .setSmallIcon(android.R.drawable.stat_notify_sync)
+                .setTicker(text)
+                .setWhen(System.currentTimeMillis())
+                .setContentTitle(getString(R.string.msg_work_log_uploaded))
+                .setContentText(text)
+                //.setContentIntent(contentIntent)
                 .setAutoCancel(true)
                 .build();
 
