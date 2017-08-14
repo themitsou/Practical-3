@@ -15,7 +15,7 @@ public class WorkLogToSend {
     private Long issue_id;
 
     @SerializedName("hours")
-    private Long hours;
+    private double hours;
 
     @SerializedName("activity_id")
     private Long activity_id;
@@ -32,7 +32,7 @@ public class WorkLogToSend {
 
     }
 
-    public WorkLogToSend(Long issue_id, Long hours, String comments) {
+    public WorkLogToSend(Long issue_id, double hours, String comments) {
         this.setIssue_id(issue_id);
         this.setHours(hours);
         this.setActivity_id(9L);
@@ -48,11 +48,11 @@ public class WorkLogToSend {
         this.issue_id = issue_id;
     }
 
-    public Long getHours() {
+    public double getHours() {
         return hours;
     }
 
-    public void setHours(Long hours) {
+    public void setHours(double hours) {
         this.hours = hours;
     }
 

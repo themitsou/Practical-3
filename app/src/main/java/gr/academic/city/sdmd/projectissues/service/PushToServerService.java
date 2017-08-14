@@ -152,7 +152,7 @@ public class PushToServerService extends IntentService {
             final long WorklogDbId = cursor.getLong(cursor.getColumnIndexOrThrow(ProjectManagementContract.WorkLog._ID));
             long issueServerId = cursor.getLong(cursor.getColumnIndexOrThrow(ProjectManagementContract.WorkLog.COLUMN_NAME_ISSUE_SERVER_ID));
             String comment = cursor.getString(cursor.getColumnIndexOrThrow(ProjectManagementContract.WorkLog.COLUMN_NAME_COMMENT));
-            long hours = cursor.getLong(cursor.getColumnIndexOrThrow(ProjectManagementContract.WorkLog.COLUMN_NAME_WORK_HOURS));
+            double hours = cursor.getDouble(cursor.getColumnIndexOrThrow(ProjectManagementContract.WorkLog.COLUMN_NAME_WORK_HOURS));
 
             executeRequest(Constants.WORK_LOGS_URL, Commons.ConnectionMethod.POST, new Gson().toJson(new MasterWorkLogToSend((new WorkLogToSend(issueServerId, hours, comment)))), new Commons.ResponseCallback() {
                 @Override

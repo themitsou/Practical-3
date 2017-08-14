@@ -98,7 +98,6 @@ public class ClubActivitiesActivity extends ToolbarActivity implements ClubActiv
     @Override
     protected void onResume() {
         super.onResume();
-
         ProjectIssueService.startFetchActivities(this, clubServerId);
     }
 

@@ -34,6 +34,7 @@ public class ProjectManagementDBHelper extends SQLiteOpenHelper {
                     ProjectManagementContract.ProjectIssue.COLUMN_NAME_SHORT_NOTE + TEXT_TYPE + COMMA_SEP +
                     ProjectManagementContract.ProjectIssue.COLUMN_NAME_LONG_NOTE + TEXT_TYPE + COMMA_SEP +
                     ProjectManagementContract.ProjectIssue.COLUMN_NAME_TIMESTAMP + INT_TYPE + COMMA_SEP +
+                    ProjectManagementContract.ProjectIssue.COLUMN_NAME_ESTIMATED_HOURS + DOUBLE_TYPE + COMMA_SEP +
                     ProjectManagementContract.ProjectIssue.COLUMN_NAME_UPLOADED_TO_SERVER + SHORT_TYPE + COMMA_SEP +
                     ProjectManagementContract.ProjectIssue.COLUMN_NAME_SERVER_ID + INT_TYPE + COMMA_SEP +
                     ProjectManagementContract.ProjectIssue.COLUMN_NAME_PROJECT_SERVER_ID + INT_TYPE + COMMA_SEP +
@@ -46,7 +47,7 @@ public class ProjectManagementDBHelper extends SQLiteOpenHelper {
                     ProjectManagementContract.WorkLog.COLUMN_NAME_ISSUE_SERVER_ID + INT_TYPE + COMMA_SEP +
                     ProjectManagementContract.WorkLog.COLUMN_NAME_SERVER_ID + INT_TYPE + COMMA_SEP +
                     ProjectManagementContract.WorkLog.COLUMN_NAME_COMMENT + TEXT_TYPE + COMMA_SEP +
-                    ProjectManagementContract.WorkLog.COLUMN_NAME_WORK_HOURS + INT_TYPE + COMMA_SEP +
+                    ProjectManagementContract.WorkLog.COLUMN_NAME_WORK_HOURS + DOUBLE_TYPE + COMMA_SEP +
                     ProjectManagementContract.WorkLog.COLUMN_NAME_UPLOADED_TO_SERVER + SHORT_TYPE + COMMA_SEP +
                     ProjectManagementContract.WorkLog.COLUMN_NAME_FOR_DELETION + SHORT_TYPE + DEFAULT_0 +
                     " )";

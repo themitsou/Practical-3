@@ -27,7 +27,7 @@ public class TimeEntry {
     private Activity activity;
 
     @SerializedName("hours")
-    private Long hours;
+    private double hours;
 
     @SerializedName("comments")
     private String comments;
@@ -46,7 +46,7 @@ public class TimeEntry {
 
     }
 
-    public TimeEntry(Long issueId, Long hours, String comments) {
+    public TimeEntry(Long issueId, double hours, String comments) {
         this.setIssue(new Issue("","","","",issueId));
         this.setHours(hours);
         this.setComments(comments);
@@ -107,11 +107,11 @@ public class TimeEntry {
         this.activity = activity;
     }
 
-    public Long getHours() {
+    public double getHours() {
         return hours;
     }
 
-    public void setHours(Long hours) {
+    public void setHours(double hours) {
         this.hours = hours;
     }
 

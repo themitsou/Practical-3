@@ -39,10 +39,9 @@ public class WorkLogService extends IntentService {
     private static final String ACTION_UNDELETE_WORK_LOG = "gr.academic.city.sdmd.studentsclubactivities.UNDELETE_WORK_LOG";
     private static final String EXTRA_PROJECT_SERVER_ISSUE_ID = "project_server_issue_id";
 
-    public static void startFetchWork_logs(Context context) {
+    public static void startFetchWorkLogs(Context context) {
         Intent intent = new Intent(context, WorkLogService.class);
         intent.setAction(ACTION_FETCH_WORK_LOGS);
-//        intent.putExtra(EXTRA_PROJECT_SERVER_ID, clubServerId);
 
         context.startService(intent);
     }

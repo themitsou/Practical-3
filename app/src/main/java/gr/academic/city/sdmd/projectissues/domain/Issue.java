@@ -16,7 +16,7 @@ public class Issue {
     private Author author;
     private String start_date;
     private String done_ratio;
-    private String estimated_hours;
+    private double estimated_hours;
     private String created_on;
 
     @SerializedName("subject")
@@ -93,11 +93,11 @@ public class Issue {
         this.done_ratio = done_ratio;
     }
 
-    public String getEstimated_hours() {
+    public double getEstimated_hours() {
         return estimated_hours;
     }
 
-    public void setEstimated_hours(String estimated_hours) {
+    public void setEstimated_hours(Double estimated_hours) {
         this.estimated_hours = estimated_hours;
     }
 
@@ -155,6 +155,7 @@ public class Issue {
         contentValues.put(ProjectManagementContract.ProjectIssue.COLUMN_NAME_TITLE, getSubject());
         contentValues.put(ProjectManagementContract.ProjectIssue.COLUMN_NAME_SHORT_NOTE, getDescription());
         contentValues.put(ProjectManagementContract.ProjectIssue.COLUMN_NAME_TIMESTAMP, getTimestamp());
+        contentValues.put(ProjectManagementContract.ProjectIssue.COLUMN_NAME_ESTIMATED_HOURS, getEstimated_hours());
         contentValues.put(ProjectManagementContract.ProjectIssue.COLUMN_NAME_SERVER_ID, getId());
         contentValues.put(ProjectManagementContract.ProjectIssue.COLUMN_NAME_PROJECT_SERVER_ID, getProject().getServerId());
 

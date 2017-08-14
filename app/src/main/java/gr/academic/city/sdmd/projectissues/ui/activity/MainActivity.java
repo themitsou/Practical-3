@@ -1,5 +1,6 @@
 package gr.academic.city.sdmd.projectissues.ui.activity;
 
+import android.content.Intent;
 import android.database.Cursor;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -19,6 +20,7 @@ import android.widget.ListView;
 import gr.academic.city.sdmd.projectissues.R;
 import gr.academic.city.sdmd.projectissues.db.ProjectManagementContract;
 import gr.academic.city.sdmd.projectissues.service.ProjectService;
+import gr.academic.city.sdmd.projectissues.service.WorkLogService;
 
 public class MainActivity extends ToolbarActivity implements LoaderManager.LoaderCallbacks<Cursor> {
 
@@ -82,6 +84,7 @@ public class MainActivity extends ToolbarActivity implements LoaderManager.Loade
         super.onResume();
 
         ProjectService.startFetchProjects(this);
+        WorkLogService.startFetchWorkLogs(this);
     }
 
     @Override
@@ -148,11 +151,19 @@ public class MainActivity extends ToolbarActivity implements LoaderManager.Loade
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.points_menu, menu);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        return true;
+        switch (item.getItemId()) {
+            case R.id.action_points:
+                Intent intent = new Intent(this, PointsActivity.class);
+                startActivity(intent);
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 }
