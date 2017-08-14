@@ -38,6 +38,8 @@ public class ProjectManagementDBHelper extends SQLiteOpenHelper {
                     ProjectManagementContract.ProjectIssue.COLUMN_NAME_UPLOADED_TO_SERVER + SHORT_TYPE + COMMA_SEP +
                     ProjectManagementContract.ProjectIssue.COLUMN_NAME_SERVER_ID + INT_TYPE + COMMA_SEP +
                     ProjectManagementContract.ProjectIssue.COLUMN_NAME_PROJECT_SERVER_ID + INT_TYPE + COMMA_SEP +
+                    ProjectManagementContract.ProjectIssue.COLUMN_NAME_ASSIGNEE_SERVER_ID + INT_TYPE + COMMA_SEP +
+                    ProjectManagementContract.ProjectIssue.COLUMN_NAME_ASSIGNEE_NAME + TEXT_TYPE + COMMA_SEP +
                     ProjectManagementContract.ProjectIssue.COLUMN_NAME_FOR_DELETION + SHORT_TYPE + DEFAULT_0 +
                     " )";
 

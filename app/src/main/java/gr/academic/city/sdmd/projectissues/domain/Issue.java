@@ -19,6 +19,8 @@ public class Issue {
     private double estimated_hours;
     private String created_on;
 
+    private AssignedTo assigned_to;
+
     @SerializedName("subject")
     private String subject;
 
@@ -149,6 +151,15 @@ public class Issue {
         this.project = project;
     }
 
+    public AssignedTo getAssigned_to() {
+        return assigned_to;
+    }
+
+    public void setAssigned_to(AssignedTo assigned_to) {
+        this.assigned_to = assigned_to;
+    }
+
+
     public ContentValues toContentValues() {
         ContentValues contentValues = new ContentValues();
 
@@ -158,7 +169,10 @@ public class Issue {
         contentValues.put(ProjectManagementContract.ProjectIssue.COLUMN_NAME_ESTIMATED_HOURS, getEstimated_hours());
         contentValues.put(ProjectManagementContract.ProjectIssue.COLUMN_NAME_SERVER_ID, getId());
         contentValues.put(ProjectManagementContract.ProjectIssue.COLUMN_NAME_PROJECT_SERVER_ID, getProject().getServerId());
-
+        contentValues.put(ProjectManagementContract.ProjectIssue.COLUMN_NAME_ASSIGNEE_SERVER_ID, getAssigned_to().getId());
+        contentValues.put(ProjectManagementContract.ProjectIssue.COLUMN_NAME_ASSIGNEE_NAME, getAssigned_to().getName());
         return contentValues;
     }
+
+
 }

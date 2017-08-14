@@ -8,5 +8,10 @@
         app:showAsAction="ifRoom"
         android:icon="@android:drawable/ic_input_get"
         android:title="@string/action_points"/>
+    <item
+        android:id="@+id/action_assignee_points"
+        app:showAsAction="ifRoom"
+        android:icon="@android:drawable/ic_menu_compass"
+        android:title="@string/action_assignee_points"/>
 
 </menu>

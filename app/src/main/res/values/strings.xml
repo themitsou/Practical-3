@@ -21,6 +21,7 @@
     <string name="action_delete">Delete Activity</string>
     <string name="action_save">Save Activity</string>
     <string name="action_points">Show points</string>
+    <string name="action_assignee_points">Show assignee points</string>
     <string name="city_name">CITY College, the International Faculty of the University of Sheffield, Leontos Sofou, Thessaloniki</string>
     <string name="msg_snackbar">One Activity Deleted!</string>
     <string name="undo">UNDO</string>

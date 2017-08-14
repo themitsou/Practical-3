@@ -157,9 +157,14 @@ public class MainActivity extends ToolbarActivity implements LoaderManager.Loade
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        Intent intent;
         switch (item.getItemId()) {
-            case R.id.action_points:
-                Intent intent = new Intent(this, PointsActivity.class);
+                case R.id.action_points:
+                intent = new Intent(this, PointsActivity.class);
+                startActivity(intent);
+                return true;
+            case R.id.action_assignee_points:
+                intent = new Intent(this, AssigneePointsActivity.class);
                 startActivity(intent);
                 return true;
             default:

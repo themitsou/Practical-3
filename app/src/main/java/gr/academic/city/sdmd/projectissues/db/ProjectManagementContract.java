@@ -39,6 +39,8 @@ public final class ProjectManagementContract {
         public static final String COLUMN_NAME_UPLOADED_TO_SERVER = "uploaded_to_server";
         public static final String COLUMN_NAME_SERVER_ID = "server_id";
         public static final String COLUMN_NAME_PROJECT_SERVER_ID = "club_server_id";
+        public static final String COLUMN_NAME_ASSIGNEE_SERVER_ID = "assignee_server_id";
+        public static final String COLUMN_NAME_ASSIGNEE_NAME = "assignee_name";
         public static final String COLUMN_NAME_FOR_DELETION = "for_deletion";
 
         public static final Uri CONTENT_URI = Uri.parse("content://" +
