@@ -54,7 +54,8 @@ public class AssigneePointsActivity extends ToolbarActivity {
         String query = "Select a._id, a.assignee_server_id, a.assignee_name,  ( 2*sum(distinct estimated_hours)- sum(b.work_hours)) as points" +
                 " from project_issue a" +
                 " join  work_log b on a.server_id = b.issue_server_id" +
-                " group by a.assignee_server_id";
+                " group by a.assignee_server_id"+
+                " order by ( 2*sum(distinct estimated_hours)- sum(b.work_hours)) desc";
 
         mCursor = sqLiteDatabase.rawQuery(query, null);
 
@@ -96,7 +97,6 @@ public class AssigneePointsActivity extends ToolbarActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.points_menu, menu);
         return true;
     }
 

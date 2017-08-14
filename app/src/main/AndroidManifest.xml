@@ -24,17 +24,19 @@
         android:theme="@style/AppTheme">
 
         <activity
-            android:name="gr.academic.city.sdmd.projectissues.ui.activity.MainActivity">
+            android:name="gr.academic.city.sdmd.projectissues.ui.activity.MainActivity"
+            android:label="@string/projects">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
+            </intent-filter>android:label="@string/projects"
         </activity>
 
         <activity
             android:name="gr.academic.city.sdmd.projectissues.ui.activity.ClubActivitiesActivity"
             android:parentActivityName="gr.academic.city.sdmd.projectissues.ui.activity.MainActivity"
-            android:launchMode="singleTop">
+            android:launchMode="singleTop"
+            android:label="@string/issues">
             <!-- Parent activity meta-data to support 4.0 and lower -->
 
             <meta-data
@@ -53,7 +55,8 @@
         <activity
             android:name="gr.academic.city.sdmd.projectissues.ui.activity.PointsActivity"
             android:parentActivityName="gr.academic.city.sdmd.projectissues.ui.activity.MainActivity"
-            android:launchMode="singleTop">
+            android:launchMode="singleTop"
+            android:label="@string/issue_points">
 
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
@@ -63,7 +66,8 @@
         <activity
             android:name="gr.academic.city.sdmd.projectissues.ui.activity.AssigneePointsActivity"
             android:parentActivityName="gr.academic.city.sdmd.projectissues.ui.activity.MainActivity"
-            android:launchMode="singleTop">
+            android:launchMode="singleTop"
+            android:label="@string/users_ranking">
 
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
@@ -74,6 +78,7 @@
         <activity
             android:name="gr.academic.city.sdmd.projectissues.ui.activity.ClubActivityDetailsActivity"
             android:parentActivityName="gr.academic.city.sdmd.projectissues.ui.activity.ClubActivitiesActivity"
+            android:label="@string/issue"
            >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"

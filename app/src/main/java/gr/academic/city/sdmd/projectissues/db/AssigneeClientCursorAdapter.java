@@ -27,7 +27,10 @@ public class AssigneeClientCursorAdapter extends CursorAdapter {
 
     public void bindView(View view, Context context, Cursor cursor) {
         TextView issue = (TextView) view.findViewById(R.id.tv_assignee);
-        issue.setText(cursor.getString(cursor.getColumnIndex("assignee_name")));
+
+        int pos = cursor.getPosition()+1;
+
+        issue.setText(pos + ". " + cursor.getString(cursor.getColumnIndex("assignee_name")));
 
         TextView points = (TextView) view.findViewById(R.id.tv_assignee_points);
         String cursorPoints = Double.toString(cursor.getDouble(cursor.getColumnIndex("points")));

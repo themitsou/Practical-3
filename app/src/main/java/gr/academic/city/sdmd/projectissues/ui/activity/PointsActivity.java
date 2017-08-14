@@ -53,7 +53,8 @@ public class PointsActivity extends ToolbarActivity {
         String query = "Select a._id, a.title, (a.estimated_hours + (a.estimated_hours- sum(b.work_hours))) as points" +
                 " from project_issue a" +
                 " join  work_log b on a.server_id = b.issue_server_id" +
-                " group by a._id, a.server_id;";
+                " group by a._id, a.server_id" +
+                " order by  (a.estimated_hours + (a.estimated_hours- sum(b.work_hours))) desc";
 
         mCursor = sqLiteDatabase.rawQuery(query, null);
 
@@ -95,8 +96,7 @@ public class PointsActivity extends ToolbarActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.points_menu, menu);
-        return true;
+       return true;
     }
 
     @Override
