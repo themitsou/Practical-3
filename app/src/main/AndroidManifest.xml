@@ -14,6 +14,7 @@
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="com.vogella.android.locationapi.maps.permission.MAPS_RECEIVE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.VIBRATE"/>
 
 
     <application
@@ -29,7 +30,7 @@
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>android:label="@string/projects"
+            </intent-filter>
         </activity>
 
         <activity
@@ -79,6 +80,7 @@
             android:name="gr.academic.city.sdmd.projectissues.ui.activity.ClubActivityDetailsActivity"
             android:parentActivityName="gr.academic.city.sdmd.projectissues.ui.activity.ClubActivitiesActivity"
             android:label="@string/issue"
+            android:launchMode="singleInstance"
            >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"

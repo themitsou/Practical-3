@@ -8,6 +8,7 @@ public final class Constants {
     private Constants() {}
 
     public static final String SERVER_URL = "http://10.0.2.2:3000/";
+//    public static final String SERVER_URL = "http://192.168.245.1:3000/";
     public static final String PROJECTS_URL = SERVER_URL + "projects.json";
     public static final String PROJECT_ISSUES_URL = SERVER_URL + "issues.json?project_id={0}";
     public static final String PROJECT_ISSUE_URL = SERVER_URL + "issues.json";

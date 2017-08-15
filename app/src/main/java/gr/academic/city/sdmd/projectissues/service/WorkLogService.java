@@ -62,7 +62,7 @@ public class WorkLogService extends IntentService {
         context.startService(intent);
     }
 
-    public static void startCreateWorkLog(Context context, long workLogID, String comment, Long workHours) {
+    public static void startCreateWorkLog(Context context, long workLogID, String comment, double workHours) {
         Intent intent = new Intent(context, WorkLogService.class);
         intent.setAction(ACTION_CREATE_WORK_LOG);
         intent.putExtra(EXTRA_PROJECT_SERVER_ISSUE_ID, workLogID);
@@ -121,7 +121,7 @@ public class WorkLogService extends IntentService {
     private void createWorkLog(Intent intent) {
         long issueServerId = intent.getLongExtra(EXTRA_PROJECT_SERVER_ISSUE_ID, -1);
         String comment = intent.getStringExtra(EXTRA_COMMENT);
-        Long workHours = intent.getLongExtra(EXTRA_WORK_HOURS,-1);
+        double workHours = intent.getDoubleExtra(EXTRA_WORK_HOURS,-1);
 
 
 

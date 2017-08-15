@@ -1,16 +1,21 @@
 package gr.academic.city.sdmd.projectissues.ui.activity.fragments;
 
 import android.animation.ObjectAnimator;
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.ContentUris;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.os.CountDownTimer;
+import android.os.Vibrator;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.support.v4.app.LoaderManager;
+import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v7.app.AlertDialog;
@@ -25,7 +30,6 @@ import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
@@ -33,9 +37,12 @@ import java.util.concurrent.TimeUnit;
 import gr.academic.city.sdmd.projectissues.R;
 import gr.academic.city.sdmd.projectissues.db.ProjectManagementContract;
 import gr.academic.city.sdmd.projectissues.service.WorkLogService;
+import gr.academic.city.sdmd.projectissues.ui.activity.ClubActivityDetailsActivity;
 import gr.academic.city.sdmd.projectissues.util.Constants;
 
+
 public class ClubActivityDetailsFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
+
 
     public interface OnFragmentInteractionListener {
         void onClubActivityDeleted(Long activity);
@@ -53,70 +60,70 @@ public class ClubActivityDetailsFragment extends Fragment implements LoaderManag
     private TextView tvLongNote;
     private TextView tvDate;
     private TextView tvProgress;
+    private TextView tvProgressMessage;
     private Long serverIssueID;
     private String comment;
-    private Long workhours;
+    private Double workhours;
 
     private ProgressBar progressBar;
     private ObjectAnimator animation;
     private int pomodori = 0;
-    private boolean timeForShortBrake = false;
-    private boolean timeForLongBrake = false;
+    private FloatingActionButton myFab;
 
-    CountDownTimer mCountDownWorkTimer = new CountDownTimer(2 * 1000, 1000) {
+    CountDownTimer mCountDownWorkTimer = new CountDownTimer(6 * 1000, 1000) {
         @Override
         public void onTick(long millisUntilFinished) {
-            //this will be called every second.
-            tvProgress.setText("" + String.format("%d : %d ",
-                    TimeUnit.MILLISECONDS.toMinutes(millisUntilFinished),
-                    TimeUnit.MILLISECONDS.toSeconds(millisUntilFinished) -
-                            TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(millisUntilFinished))));
-
+            tvProgressMessage.setText("Let's focus for the next minutes on the issue... ");
+            tvProgress.setText(String.format("%d",
+                    TimeUnit.MILLISECONDS.toMinutes(millisUntilFinished)) + " minutes");
         }
 
         @Override
         public void onFinish() {
+            showEndWorkNotification(clubActivityId);
             insertIssueComment();
         }
     };
 
-    CountDownTimer mCountDownLongBrakeTimer = new CountDownTimer(2 * 1000, 1000) {
+    CountDownTimer mCountDownLongBrakeTimer = new CountDownTimer(6 * 1000, 1000) {
         @Override
         public void onTick(long millisUntilFinished) {
-            //this will be called every second.
-            tvProgress.setText("" + String.format("Let's have a long brake for %d : %d ",
-                    TimeUnit.MILLISECONDS.toMinutes(millisUntilFinished),
-                    TimeUnit.MILLISECONDS.toSeconds(millisUntilFinished) -
-                            TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(millisUntilFinished))));
+            tvProgressMessage.setText("Let's have a long brake now... ");
+            tvProgress.setText(String.format("%d",
+                    TimeUnit.MILLISECONDS.toMinutes(millisUntilFinished)) + " minutes");
 
         }
 
         @Override
         public void onFinish() {
-            timeForLongBrake = false;
-            mCountDownWorkTimer.start();
-            startAnimation(2 * 1000);
+            showEndBreakNotification(clubActivityId);
+            proceedToWork();
         }
     };
 
-    CountDownTimer mCountDownShortBrakeTimer = new CountDownTimer(2 * 1000, 1000) {
+    CountDownTimer mCountDownShortBrakeTimer = new CountDownTimer(6 * 1000, 1000) {
         @Override
         public void onTick(long millisUntilFinished) {
-            //this will be called every second.
-            tvProgress.setText("" + String.format("Let's have a short brake for %d : %d ",
-                    TimeUnit.MILLISECONDS.toMinutes(millisUntilFinished),
-                    TimeUnit.MILLISECONDS.toSeconds(millisUntilFinished) -
-                            TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(millisUntilFinished))));
-
+            tvProgressMessage.setText("Let's have a short brake now... ");
+            tvProgress.setText(String.format("%d",
+                    TimeUnit.MILLISECONDS.toMinutes(millisUntilFinished)) + " minutes");
         }
 
         @Override
         public void onFinish() {
-            timeForShortBrake = false;
-            mCountDownWorkTimer.start();
-            startAnimation(2 * 1000);
+            vibrate();
+            showEndBreakNotification(clubActivityId);
+            proceedToWork();
         }
     };
+
+    private void vibrate() {
+        // Get instance of Vibrator from current Context
+        Vibrator v = (Vibrator) this.getContext().getSystemService(Context.VIBRATOR_SERVICE);
+
+        // Vibrate for 400 milliseconds
+        v.vibrate(400);
+    }
 
 
     private View view;
@@ -161,23 +168,17 @@ public class ClubActivityDetailsFragment extends Fragment implements LoaderManag
         tvDate = (TextView) view.findViewById(R.id.tv_club_activity_date);
 
         tvProgress = (TextView) view.findViewById(R.id.tv_progressText);
+        tvProgressMessage = (TextView) view.findViewById(R.id.tv_progressMessage);
         progressBar = (ProgressBar) view.findViewById(R.id.progressBar);
         animation = ObjectAnimator.ofInt(progressBar, "progress", 1000, 0);
 
-        final FloatingActionButton myFab = (FloatingActionButton) view.findViewById(R.id.floatingActionButton);
+        myFab = (FloatingActionButton) view.findViewById(R.id.floatingActionButton);
         myFab.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 if (animation.isRunning()) {
-                    myFab.setImageResource(android.R.drawable.ic_media_play);
-                    animation.end();
-                    mCountDownWorkTimer.cancel();
-                    mCountDownShortBrakeTimer.cancel();
-                    mCountDownLongBrakeTimer.cancel();
-                    tvProgress.setText(R.string.progress_message);
+                    cancelWork();
                 } else {
-                    startAnimation(2 * 1000); //in milliseconds
-                    myFab.setImageResource(android.R.drawable.checkbox_off_background);
-                    mCountDownWorkTimer.start();
+                    continueToWork();
                 }
 
             }
@@ -187,6 +188,16 @@ public class ClubActivityDetailsFragment extends Fragment implements LoaderManag
         getLoaderManager().initLoader(CLUB_ACTIVITY_LOADER, null, this);
 
         return view;
+    }
+
+    private void cancelWork() {
+        myFab.setImageResource(android.R.drawable.ic_media_play);
+        animation.end();
+        mCountDownWorkTimer.cancel();
+        mCountDownShortBrakeTimer.cancel();
+        mCountDownLongBrakeTimer.cancel();
+        tvProgress.setText(R.string.progress_message);
+        tvProgressMessage.setText("");
     }
 
 
@@ -241,7 +252,7 @@ public class ClubActivityDetailsFragment extends Fragment implements LoaderManag
             tvShortNote.setText(cursor.getString(cursor.getColumnIndexOrThrow(ProjectManagementContract.ProjectIssue.COLUMN_NAME_SHORT_NOTE)));
             tvLongNote.setText(cursor.getString(cursor.getColumnIndexOrThrow(ProjectManagementContract.ProjectIssue.COLUMN_NAME_LONG_NOTE)));
             tvDate.setText(dateFormat.format(new Date(cursor.getLong(cursor.getColumnIndexOrThrow(ProjectManagementContract.ProjectIssue.COLUMN_NAME_TIMESTAMP)))));
-            serverIssueID=cursor.getLong(cursor.getColumnIndexOrThrow(ProjectManagementContract.ProjectIssue.COLUMN_NAME_SERVER_ID));
+            serverIssueID = cursor.getLong(cursor.getColumnIndexOrThrow(ProjectManagementContract.ProjectIssue.COLUMN_NAME_SERVER_ID));
         }
 
         if (cursor != null) {
@@ -273,17 +284,27 @@ public class ClubActivityDetailsFragment extends Fragment implements LoaderManag
         animation.start();
     }
 
-    public void continueWork() {
+    private void continueToWork() {
+        startAnimation(25 * 60 * 1000); //in milliseconds
+        myFab.setImageResource(android.R.drawable.checkbox_off_background);
+        mCountDownWorkTimer.start();
+        NotificationManager notificationManager = (NotificationManager) this.getContext().getSystemService(Context.NOTIFICATION_SERVICE);
+        notificationManager.cancel(16);
+    }
+
+    public void continueToBreak() {
+
+        NotificationManager notificationManager = (NotificationManager) this.getContext().getSystemService(Context.NOTIFICATION_SERVICE);
+        notificationManager.cancel(15);
+
         if (pomodori < 4) {
             pomodori++;
-            timeForShortBrake = true;
             mCountDownShortBrakeTimer.start();
-            startAnimation(2 * 1000);
+            startAnimation(5 * 60 * 1000);
         } else {
             pomodori = 0;
-            timeForLongBrake = true;
             mCountDownLongBrakeTimer.start();
-            startAnimation(2 * 1000);
+            startAnimation(15 * 60 * 1000);
         }
     }
 
@@ -304,17 +325,40 @@ public class ClubActivityDetailsFragment extends Fragment implements LoaderManag
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 comment = inputComment.getText().toString();
-                workhours = 1L;//Long.valueOf(inputWorkHours.getText().toString());
+                workhours = 0.42;
                 saveNewWorkLog();
                 dialog.dismiss();
-               // continueWork();
+                continueToBreak();
             }
         });
         builder.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 dialog.cancel();
-                continueWork();
+                continueToBreak();
+            }
+        });
+
+        builder.show();
+    }
+
+    private void proceedToWork() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+        builder.setTitle("That was a nice break! Do you want to continue on your issue?");
+
+        // Set up the buttons
+        builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+                continueToWork();
+            }
+        });
+        builder.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.cancel();
+                cancelWork();
             }
         });
 
@@ -323,12 +367,50 @@ public class ClubActivityDetailsFragment extends Fragment implements LoaderManag
 
     private void saveNewWorkLog() {
         //for test purposes, added as a default place
-
-
         WorkLogService.startCreateWorkLog(this.getContext(),
                 serverIssueID,
                 comment,
                 workhours);
 
+    }
+
+    private void showEndWorkNotification(long clubActivityId) {
+        PendingIntent contentIntent = PendingIntent.getActivity(this.getContext(), 0, ClubActivityDetailsActivity.getStartIntent(this.getContext(), clubActivityId).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP), PendingIntent.FLAG_CANCEL_CURRENT);
+
+        Notification notification = new NotificationCompat.Builder(this.getContext())
+                .setSmallIcon(android.R.drawable.btn_star_big_on)
+                .setTicker("Great job my friend! Comment your work!")
+                .setWhen(System.currentTimeMillis())
+                .setContentTitle("Great job my friend!")
+                .setContentText("Comment your work!")
+                .setContentIntent(contentIntent)
+                .setAutoCancel(true)
+                .build();
+
+        NotificationManager mNotificationManager =
+                (NotificationManager) this.getContext().getSystemService(Context.NOTIFICATION_SERVICE);
+
+        // NOTIFICATION_ID allows you to update the notification later on.
+        mNotificationManager.notify(15, notification);
+    }
+
+    private void showEndBreakNotification(long clubActivityId) {
+        PendingIntent contentIntent = PendingIntent.getActivity(this.getContext(), 0, ClubActivityDetailsActivity.getStartIntent(this.getContext(), clubActivityId).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP), PendingIntent.FLAG_CANCEL_CURRENT);
+
+        Notification notification = new NotificationCompat.Builder(this.getContext())
+                .setSmallIcon(android.R.drawable.btn_star_big_off)
+                .setTicker("Time to get back to work!")
+                .setWhen(System.currentTimeMillis())
+                .setContentTitle("This was a good break!")
+                .setContentText("Time to put some effort on your issues :)")
+                .setContentIntent(contentIntent)
+                .setAutoCancel(true)
+                .build();
+
+        NotificationManager mNotificationManager =
+                (NotificationManager) this.getContext().getSystemService(Context.NOTIFICATION_SERVICE);
+
+        // NOTIFICATION_ID allows you to update the notification later on.
+        mNotificationManager.notify(16, notification);
     }
 }

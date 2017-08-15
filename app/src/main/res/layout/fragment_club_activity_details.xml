@@ -49,6 +49,16 @@
         android:padding="5dp"
         tools:text="Long note goes here. It is very long possible spanning multiple rows." />
 
+    <TextView
+        android:id="@+id/tv_progressMessage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="15dp"
+        android:textAlignment="center"
+        android:layout_marginTop="5dp"
+        android:layout_below="@id/tv_club_activity_long_note"
+        android:layout_centerHorizontal="true" />
+
     <ProgressBar
         android:id="@+id/progressBar"
         style="?android:attr/progressBarStyleHorizontal"
@@ -66,7 +76,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/progress_message"
-        android:textSize="25dp"
+        android:textAlignment="center"
+        android:textSize="20dp"
         android:layout_marginBottom="140dp"
         android:layout_alignBottom="@+id/progressBar"
         android:layout_centerHorizontal="true" />
