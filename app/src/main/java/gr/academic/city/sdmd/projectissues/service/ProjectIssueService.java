@@ -95,29 +95,58 @@ public class ProjectIssueService extends IntentService {
 
     private void fetchActivities(Intent intent) {
         long projectServerId = intent.getLongExtra(EXTRA_PROJECT_SERVER_ID, -1);
-        executeRequest(MessageFormat.format(Constants.PROJECT_ISSUES_URL, projectServerId), Commons.ConnectionMethod.GET, null, new GsonResponseCallback<Issues>(Issues.class) {
-            @Override
-            protected void onResponse(int responseCode, Issues projectIssues) {
+        if (projectServerId ==-1){
+            executeRequest(Constants.PROJECT_ISSUE_URL, Commons.ConnectionMethod.GET, null, new GsonResponseCallback<Issues>(Issues.class) {
+                @Override
+                protected void onResponse(int responseCode, Issues projectIssues) {
 
-                for (Issue issue : projectIssues.getIssues()) {
-                    if (getContentResolver().query(
-                            ProjectManagementContract.ProjectIssue.CONTENT_URI,
-                            new String[0],
-                            ProjectManagementContract.ProjectIssue.COLUMN_NAME_SERVER_ID + " = ?",
-                            new String[]{String.valueOf(issue.getServerId())},
-                            null).getCount() == 0) {
-
-                        // this club activity is not in db, add it
-                        ContentValues contentValues = issue.toContentValues();
-                        contentValues.put(ProjectManagementContract.ProjectIssue.COLUMN_NAME_UPLOADED_TO_SERVER, 1);
-
-                        getContentResolver().insert(
+                    for (Issue issue : projectIssues.getIssues()) {
+                        if (getContentResolver().query(
                                 ProjectManagementContract.ProjectIssue.CONTENT_URI,
-                                contentValues);
+                                new String[0],
+                                ProjectManagementContract.ProjectIssue.COLUMN_NAME_SERVER_ID + " = ?",
+                                new String[]{String.valueOf(issue.getServerId())},
+                                null).getCount() == 0) {
+
+                            // this club activity is not in db, add it
+                            ContentValues contentValues = issue.toContentValues();
+                            contentValues.put(ProjectManagementContract.ProjectIssue.COLUMN_NAME_UPLOADED_TO_SERVER, 1);
+
+                            getContentResolver().insert(
+                                    ProjectManagementContract.ProjectIssue.CONTENT_URI,
+                                    contentValues);
+                        }
                     }
                 }
-            }
-        });
+            });
+
+
+        }else {
+
+            executeRequest(MessageFormat.format(Constants.PROJECT_ISSUES_URL, projectServerId), Commons.ConnectionMethod.GET, null, new GsonResponseCallback<Issues>(Issues.class) {
+                @Override
+                protected void onResponse(int responseCode, Issues projectIssues) {
+
+                    for (Issue issue : projectIssues.getIssues()) {
+                        if (getContentResolver().query(
+                                ProjectManagementContract.ProjectIssue.CONTENT_URI,
+                                new String[0],
+                                ProjectManagementContract.ProjectIssue.COLUMN_NAME_SERVER_ID + " = ?",
+                                new String[]{String.valueOf(issue.getServerId())},
+                                null).getCount() == 0) {
+
+                            // this club activity is not in db, add it
+                            ContentValues contentValues = issue.toContentValues();
+                            contentValues.put(ProjectManagementContract.ProjectIssue.COLUMN_NAME_UPLOADED_TO_SERVER, 1);
+
+                            getContentResolver().insert(
+                                    ProjectManagementContract.ProjectIssue.CONTENT_URI,
+                                    contentValues);
+                        }
+                    }
+                }
+            });
+        }
     }
 
     private void createProjectIssue(Intent intent) {

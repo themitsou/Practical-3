@@ -33,7 +33,7 @@ public class AssigneeClientCursorAdapter extends CursorAdapter {
         issue.setText(pos + ". " + cursor.getString(cursor.getColumnIndex("assignee_name")));
 
         TextView points = (TextView) view.findViewById(R.id.tv_assignee_points);
-        String cursorPoints = Double.toString(cursor.getDouble(cursor.getColumnIndex("points")));
+        String cursorPoints = String.format("%.2f", cursor.getDouble(cursor.getColumnIndex("points")));
         points.setText(cursorPoints);
     }
 

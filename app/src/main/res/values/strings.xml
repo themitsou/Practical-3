@@ -30,10 +30,10 @@
     <string name="issue_input_work_hours_hint">Hours of effort:</string>
     <string name="msg_work_log_uploaded">Work log uploaded to server successfully.</string>
     <string name="projects">Track It!&gt; Projects</string>
-    <string name="issues"> Track It!&gt; Issues</string>
-    <string name="issue"> Track It!&gt; Issue</string>
-    <string name="users_ranking">Track It!&gt; Users Ranking</string>
-    <string name="issue_points">Track It!&gt; Issue Points</string>
+    <string name="issues">Issues</string>
+    <string name="issue">Issue</string>
+    <string name="users_ranking">User Ranking</string>
+    <string name="issue_points">Issue Points</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>

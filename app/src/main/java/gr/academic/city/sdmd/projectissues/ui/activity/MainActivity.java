@@ -19,6 +19,7 @@ import android.widget.ListView;
 
 import gr.academic.city.sdmd.projectissues.R;
 import gr.academic.city.sdmd.projectissues.db.ProjectManagementContract;
+import gr.academic.city.sdmd.projectissues.service.ProjectIssueService;
 import gr.academic.city.sdmd.projectissues.service.ProjectService;
 import gr.academic.city.sdmd.projectissues.service.WorkLogService;
 
@@ -84,6 +85,7 @@ public class MainActivity extends ToolbarActivity implements LoaderManager.Loade
         super.onResume();
 
         ProjectService.startFetchProjects(this);
+        ProjectIssueService.startFetchActivities(this,-1);
         WorkLogService.startFetchWorkLogs(this);
     }
 

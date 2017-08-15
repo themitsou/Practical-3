@@ -25,8 +25,7 @@
         android:theme="@style/AppTheme">
 
         <activity
-            android:name="gr.academic.city.sdmd.projectissues.ui.activity.MainActivity"
-            android:label="@string/projects">
+            android:name="gr.academic.city.sdmd.projectissues.ui.activity.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />

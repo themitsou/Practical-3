@@ -63,14 +63,14 @@ public class ClubActivityDetailsFragment extends Fragment implements LoaderManag
     private TextView tvProgressMessage;
     private Long serverIssueID;
     private String comment;
-    private Double workhours;
+    private Double workHours;
 
     private ProgressBar progressBar;
     private ObjectAnimator animation;
     private int pomodori = 0;
     private FloatingActionButton myFab;
 
-    CountDownTimer mCountDownWorkTimer = new CountDownTimer(6 * 1000, 1000) {
+    CountDownTimer mCountDownWorkTimer = new CountDownTimer(25 * 60 * 1000, 1000) {
         @Override
         public void onTick(long millisUntilFinished) {
             tvProgressMessage.setText("Let's focus for the next minutes on the issue... ");
@@ -85,7 +85,7 @@ public class ClubActivityDetailsFragment extends Fragment implements LoaderManag
         }
     };
 
-    CountDownTimer mCountDownLongBrakeTimer = new CountDownTimer(6 * 1000, 1000) {
+    CountDownTimer mCountDownLongBrakeTimer = new CountDownTimer(15 * 60 * 1000, 1000) {
         @Override
         public void onTick(long millisUntilFinished) {
             tvProgressMessage.setText("Let's have a long brake now... ");
@@ -101,7 +101,7 @@ public class ClubActivityDetailsFragment extends Fragment implements LoaderManag
         }
     };
 
-    CountDownTimer mCountDownShortBrakeTimer = new CountDownTimer(6 * 1000, 1000) {
+    CountDownTimer mCountDownShortBrakeTimer = new CountDownTimer(5 * 60 * 1000, 1000) {
         @Override
         public void onTick(long millisUntilFinished) {
             tvProgressMessage.setText("Let's have a short brake now... ");
@@ -285,9 +285,9 @@ public class ClubActivityDetailsFragment extends Fragment implements LoaderManag
     }
 
     private void continueToWork() {
-        startAnimation(25 * 60 * 1000); //in milliseconds
         myFab.setImageResource(android.R.drawable.checkbox_off_background);
         mCountDownWorkTimer.start();
+        startAnimation(25 * 60 * 1000); //in milliseconds
         NotificationManager notificationManager = (NotificationManager) this.getContext().getSystemService(Context.NOTIFICATION_SERVICE);
         notificationManager.cancel(16);
     }
@@ -325,7 +325,7 @@ public class ClubActivityDetailsFragment extends Fragment implements LoaderManag
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 comment = inputComment.getText().toString();
-                workhours = 0.42;
+                workHours = 0.42;
                 saveNewWorkLog();
                 dialog.dismiss();
                 continueToBreak();
@@ -370,7 +370,7 @@ public class ClubActivityDetailsFragment extends Fragment implements LoaderManag
         WorkLogService.startCreateWorkLog(this.getContext(),
                 serverIssueID,
                 comment,
-                workhours);
+                workHours);
 
     }
 
