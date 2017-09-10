@@ -8,7 +8,7 @@
         android:color="?colorAccent"/>
     <stroke
         android:width="2dip"
-        android:color="?android:colorBackground" />
+        android:color="?android:colorAccent" />
     <padding
         android:left="6dip"
         android:right="6dip"
