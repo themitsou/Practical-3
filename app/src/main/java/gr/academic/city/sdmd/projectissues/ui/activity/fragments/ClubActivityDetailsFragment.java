@@ -8,6 +8,7 @@ import android.content.ContentUris;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.os.CountDownTimer;
@@ -58,9 +59,9 @@ public class ClubActivityDetailsFragment extends Fragment implements LoaderManag
     private static final int CLUB_ACTIVITY_LOADER = 20;
     private static final String EXTRA_ACTIVITY_ID = "Activity_ID";
 
-    private static final int WORK_CYCLE_DURATION = 10*1000;
-    private static final int SMALL_BREAK_DURATION = 10*1000;
-    private static final int LONG_BREAK_DURATION = 10*1000;
+    private static final int WORK_CYCLE_DURATION = 10 * 1000;
+    private static final int SMALL_BREAK_DURATION = 10 * 1000;
+    private static final int LONG_BREAK_DURATION = 10 * 1000;
 
 
     private long clubActivityId;
@@ -80,7 +81,9 @@ public class ClubActivityDetailsFragment extends Fragment implements LoaderManag
     private ProgressBar progressBar;
     private ObjectAnimator animation;
     private int pomodori = 0;
+    private int greatPomodori = 0;
     private FloatingActionButton myFab;
+    private SharedPreferences sharedPref;
 
     CountDownTimer mCountDownWorkTimer = new CountDownTimer(WORK_CYCLE_DURATION, 1000) {
         @Override
@@ -174,6 +177,8 @@ public class ClubActivityDetailsFragment extends Fragment implements LoaderManag
         // Inflate the layout for this fragment
         view = inflater.inflate(R.layout.fragment_club_activity_details, container, false);
 
+        loadData();
+
         tvTitle = (TextView) view.findViewById(R.id.tv_club_activity_title);
         tvShortNote = (TextView) view.findViewById(R.id.tv_club_activity_short_note);
         tvLongNote = (TextView) view.findViewById(R.id.tv_club_activity_long_note);
@@ -182,7 +187,7 @@ public class ClubActivityDetailsFragment extends Fragment implements LoaderManag
         tvProgress = (TextView) view.findViewById(R.id.tv_progressText);
         tvProgressMessage = (TextView) view.findViewById(R.id.tv_progressMessage);
 
-        textView = (TextView)  view.findViewById(R.id.tv_trophyText);
+        textView = (TextView) view.findViewById(R.id.tv_trophyText);
         gifView = (GifImageView) view.findViewById(R.id.trophyGifView);
 
         progressBar = (ProgressBar) view.findViewById(R.id.progressBar);
@@ -319,12 +324,19 @@ public class ClubActivityDetailsFragment extends Fragment implements LoaderManag
             mCountDownShortBrakeTimer.start();
             startAnimation(SMALL_BREAK_DURATION);
         } else {
+            greatPomodori++;
+            saveData(greatPomodori);
+
+            textView.setText("Great Job! You have completed "+ String.valueOf(greatPomodori*4) +" sessions in a row!");
 
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
                     Animation fadeInAnimation = AnimationUtils.loadAnimation(
                             view.getContext(), R.anim.fade_in_view);
+
+                    final Animation fadeOutAnimation = AnimationUtils.loadAnimation(
+                            view.getContext(), R.anim.fade_out_view);
 
                     textView.startAnimation(fadeInAnimation);
                     gifView.startAnimation(fadeInAnimation);
@@ -345,31 +357,47 @@ public class ClubActivityDetailsFragment extends Fragment implements LoaderManag
 
                         @Override
                         public void onAnimationEnd(Animation animation) {
+                            Handler handler = new Handler();
+                            handler.postDelayed(new Runnable() {
+                                public void run() {
+                                    textView.startAnimation(fadeOutAnimation);
+                                    gifView.startAnimation(fadeOutAnimation);
+                                }
+                            }, 10000);
+
+
+                        }
+                    });
+
+                    fadeOutAnimation.setAnimationListener(new Animation.AnimationListener() {
+
+                        @Override
+                        public void onAnimationStart(Animation animation) {
                             // TODO Auto-generated method stub
+                        }
+
+                        @Override
+                        public void onAnimationRepeat(Animation animation) {
+                            // TODO Auto-generated method stub
+
+                        }
+
+                        @Override
+                        public void onAnimationEnd(Animation animation) {
+                            textView.setVisibility(View.INVISIBLE);
+                            gifView.setVisibility(View.INVISIBLE);
+
+                            pomodori = 0;
+                            mCountDownLongBrakeTimer.start();
+                            startAnimation(LONG_BREAK_DURATION);
+
 
                         }
                     });
                 }
 
-            }, 1000);
+            }, 500);
 
-
-
-
-
-            Handler handler = new Handler();
-            handler.postDelayed(new Runnable() {
-                public void run() {
-
-                    textView.setVisibility(View.INVISIBLE);
-                    gifView.setVisibility(View.INVISIBLE);
-
-                    pomodori = 0;
-                    mCountDownLongBrakeTimer.start();
-                    startAnimation(LONG_BREAK_DURATION);
-
-                }
-            }, 10000);
 
         }
     }
@@ -478,5 +506,17 @@ public class ClubActivityDetailsFragment extends Fragment implements LoaderManag
 
         // NOTIFICATION_ID allows you to update the notification later on.
         mNotificationManager.notify(16, notification);
+    }
+
+
+    private void loadData(){
+        SharedPreferences sp = view.getContext().getSharedPreferences("MyPrefs", Context.MODE_PRIVATE);
+        greatPomodori = sp.getInt("GreatPomodori", 0);
+    }
+
+    private void saveData(int newGreatPomodori){
+        SharedPreferences sp = view.getContext().getSharedPreferences("MyPrefs", Context.MODE_PRIVATE);
+        SharedPreferences.Editor mEditor = sp.edit();
+        mEditor.putInt("GreatPomodori", newGreatPomodori).commit();
     }
 }
