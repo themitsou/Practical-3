@@ -8,6 +8,7 @@
         android:id="@+id/toolbar"
         layout="@layout/layout_toolbar" />
 
+
     <TextView
         android:id="@+id/tv_club_activity_title"
         android:layout_width="wrap_content"
@@ -82,6 +83,8 @@
         android:layout_alignBottom="@+id/progressBar"
         android:layout_centerHorizontal="true" />
 
+
+
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/floatingActionButton"
         android:layout_width="wrap_content"
@@ -93,5 +96,25 @@
         android:clickable="true"
         android:src="@android:drawable/ic_media_play"
         android:visibility="visible" />
+
+    <pl.droidsonroids.gif.GifImageView
+        android:id="@+id/trophyGifView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:src="@drawable/newtrophy"
+        android:background="@color/gifGray"
+        android:visibility="invisible"/>
+
+    <TextView
+        android:id="@+id/tv_trophyText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/first_trophy_message"
+        android:textAlignment="center"
+        android:textSize="25dp"
+        android:layout_marginTop="100dp"
+        android:layout_alignTop="@+id/trophyGifView"
+        android:layout_centerHorizontal="true"
+        android:visibility="invisible"/>
 
 </RelativeLayout>

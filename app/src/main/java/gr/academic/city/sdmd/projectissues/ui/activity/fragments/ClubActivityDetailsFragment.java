@@ -11,6 +11,7 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.os.CountDownTimer;
+import android.os.Handler;
 import android.os.Vibrator;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
@@ -25,6 +26,9 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AlphaAnimation;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.EditText;
 import android.widget.ProgressBar;
@@ -39,6 +43,7 @@ import gr.academic.city.sdmd.projectissues.db.ProjectManagementContract;
 import gr.academic.city.sdmd.projectissues.service.WorkLogService;
 import gr.academic.city.sdmd.projectissues.ui.activity.ClubActivityDetailsActivity;
 import gr.academic.city.sdmd.projectissues.util.Constants;
+import pl.droidsonroids.gif.GifImageView;
 
 
 public class ClubActivityDetailsFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
@@ -53,6 +58,11 @@ public class ClubActivityDetailsFragment extends Fragment implements LoaderManag
     private static final int CLUB_ACTIVITY_LOADER = 20;
     private static final String EXTRA_ACTIVITY_ID = "Activity_ID";
 
+    private static final int WORK_CYCLE_DURATION = 10*1000;
+    private static final int SMALL_BREAK_DURATION = 10*1000;
+    private static final int LONG_BREAK_DURATION = 10*1000;
+
+
     private long clubActivityId;
 
     private TextView tvTitle;
@@ -65,12 +75,14 @@ public class ClubActivityDetailsFragment extends Fragment implements LoaderManag
     private String comment;
     private Double workHours;
 
+    private TextView textView;
+    private GifImageView gifView;
     private ProgressBar progressBar;
     private ObjectAnimator animation;
     private int pomodori = 0;
     private FloatingActionButton myFab;
 
-    CountDownTimer mCountDownWorkTimer = new CountDownTimer(25 * 60 * 1000, 1000) {
+    CountDownTimer mCountDownWorkTimer = new CountDownTimer(WORK_CYCLE_DURATION, 1000) {
         @Override
         public void onTick(long millisUntilFinished) {
             tvProgressMessage.setText("Let's focus for the next minutes on the issue... ");
@@ -85,7 +97,7 @@ public class ClubActivityDetailsFragment extends Fragment implements LoaderManag
         }
     };
 
-    CountDownTimer mCountDownLongBrakeTimer = new CountDownTimer(15 * 60 * 1000, 1000) {
+    CountDownTimer mCountDownLongBrakeTimer = new CountDownTimer(LONG_BREAK_DURATION, 1000) {
         @Override
         public void onTick(long millisUntilFinished) {
             tvProgressMessage.setText("Let's have a long brake now... ");
@@ -101,7 +113,7 @@ public class ClubActivityDetailsFragment extends Fragment implements LoaderManag
         }
     };
 
-    CountDownTimer mCountDownShortBrakeTimer = new CountDownTimer(5 * 60 * 1000, 1000) {
+    CountDownTimer mCountDownShortBrakeTimer = new CountDownTimer(SMALL_BREAK_DURATION, 1000) {
         @Override
         public void onTick(long millisUntilFinished) {
             tvProgressMessage.setText("Let's have a short brake now... ");
@@ -169,6 +181,10 @@ public class ClubActivityDetailsFragment extends Fragment implements LoaderManag
 
         tvProgress = (TextView) view.findViewById(R.id.tv_progressText);
         tvProgressMessage = (TextView) view.findViewById(R.id.tv_progressMessage);
+
+        textView = (TextView)  view.findViewById(R.id.tv_trophyText);
+        gifView = (GifImageView) view.findViewById(R.id.trophyGifView);
+
         progressBar = (ProgressBar) view.findViewById(R.id.progressBar);
         animation = ObjectAnimator.ofInt(progressBar, "progress", 1000, 0);
 
@@ -287,7 +303,7 @@ public class ClubActivityDetailsFragment extends Fragment implements LoaderManag
     private void continueToWork() {
         myFab.setImageResource(android.R.drawable.checkbox_off_background);
         mCountDownWorkTimer.start();
-        startAnimation(25 * 60 * 1000); //in milliseconds
+        startAnimation(WORK_CYCLE_DURATION); //in milliseconds
         NotificationManager notificationManager = (NotificationManager) this.getContext().getSystemService(Context.NOTIFICATION_SERVICE);
         notificationManager.cancel(16);
     }
@@ -297,14 +313,64 @@ public class ClubActivityDetailsFragment extends Fragment implements LoaderManag
         NotificationManager notificationManager = (NotificationManager) this.getContext().getSystemService(Context.NOTIFICATION_SERVICE);
         notificationManager.cancel(15);
 
+        pomodori++;
+
         if (pomodori < 4) {
-            pomodori++;
             mCountDownShortBrakeTimer.start();
-            startAnimation(5 * 60 * 1000);
+            startAnimation(SMALL_BREAK_DURATION);
         } else {
-            pomodori = 0;
-            mCountDownLongBrakeTimer.start();
-            startAnimation(15 * 60 * 1000);
+
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    Animation fadeInAnimation = AnimationUtils.loadAnimation(
+                            view.getContext(), R.anim.fade_in_view);
+
+                    textView.startAnimation(fadeInAnimation);
+                    gifView.startAnimation(fadeInAnimation);
+
+                    fadeInAnimation.setAnimationListener(new Animation.AnimationListener() {
+
+                        @Override
+                        public void onAnimationStart(Animation animation) {
+                            textView.setVisibility(View.VISIBLE);
+                            gifView.setVisibility(View.VISIBLE);
+                        }
+
+                        @Override
+                        public void onAnimationRepeat(Animation animation) {
+                            // TODO Auto-generated method stub
+
+                        }
+
+                        @Override
+                        public void onAnimationEnd(Animation animation) {
+                            // TODO Auto-generated method stub
+
+                        }
+                    });
+                }
+
+            }, 1000);
+
+
+
+
+
+            Handler handler = new Handler();
+            handler.postDelayed(new Runnable() {
+                public void run() {
+
+                    textView.setVisibility(View.INVISIBLE);
+                    gifView.setVisibility(View.INVISIBLE);
+
+                    pomodori = 0;
+                    mCountDownLongBrakeTimer.start();
+                    startAnimation(LONG_BREAK_DURATION);
+
+                }
+            }, 10000);
+
         }
     }
 

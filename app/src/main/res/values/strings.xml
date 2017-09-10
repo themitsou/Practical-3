@@ -34,6 +34,8 @@
     <string name="issue">Issue</string>
     <string name="users_ranking">User Ranking</string>
     <string name="issue_points">Issue Points</string>
+    <string name="first_trophy_message">Great Job! You have completed 4 sessions in a row!</string>
+
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
