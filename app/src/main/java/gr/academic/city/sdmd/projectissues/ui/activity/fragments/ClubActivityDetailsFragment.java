@@ -191,6 +191,7 @@ public class ClubActivityDetailsFragment extends Fragment implements LoaderManag
         gifView = (GifImageView) view.findViewById(R.id.trophyGifView);
 
         progressBar = (ProgressBar) view.findViewById(R.id.progressBar);
+        progressBar.setRotation(-90f);
         animation = ObjectAnimator.ofInt(progressBar, "progress", 1000, 0);
 
         myFab = (FloatingActionButton) view.findViewById(R.id.floatingActionButton);
@@ -214,6 +215,7 @@ public class ClubActivityDetailsFragment extends Fragment implements LoaderManag
     private void cancelWork() {
         myFab.setImageResource(android.R.drawable.ic_media_play);
         animation.end();
+        progressBar.setVisibility(View.INVISIBLE);
         mCountDownWorkTimer.cancel();
         mCountDownShortBrakeTimer.cancel();
         mCountDownLongBrakeTimer.cancel();
@@ -299,6 +301,7 @@ public class ClubActivityDetailsFragment extends Fragment implements LoaderManag
     }
 
     public void startAnimation(long duration) {
+        progressBar.setVisibility(View.VISIBLE);
         animation.end();
         animation.setDuration(duration); //in milliseconds
         animation.setInterpolator(new DecelerateInterpolator());
