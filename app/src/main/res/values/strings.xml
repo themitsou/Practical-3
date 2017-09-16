@@ -20,8 +20,7 @@
     <string name="google_places_key">AIzaSyAv2tIrknnKA94WMedkdLbTVDpH0g_aRf0</string>
     <string name="action_delete">Delete Activity</string>
     <string name="action_save">Save Activity</string>
-    <string name="action_points">Show points</string>
-    <string name="action_assignee_points">Show assignee points</string>
+    <string name="action_project_points">Show project points</string>
     <string name="city_name">CITY College, the International Faculty of the University of Sheffield, Leontos Sofou, Thessaloniki</string>
     <string name="msg_snackbar">One Activity Deleted!</string>
     <string name="undo">UNDO</string>
@@ -32,7 +31,8 @@
     <string name="projects">Track It!&gt; Projects</string>
     <string name="issues">Issues</string>
     <string name="issue">Issue</string>
-    <string name="users_ranking">User Ranking</string>
+    <string name="projects_ranking">Projects Ranking</string>
+    <string name="user_trophies">User Trophies</string>
     <string name="issue_points">Issue Points</string>
     <string name="first_trophy_message">Great Job! You have completed 4 sessions in a row!</string>
 
@@ -40,4 +40,5 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="thessaloniki_city">Thessaloniki</string>
+    <string name="imageTrophy">a trophy</string>
 </resources>

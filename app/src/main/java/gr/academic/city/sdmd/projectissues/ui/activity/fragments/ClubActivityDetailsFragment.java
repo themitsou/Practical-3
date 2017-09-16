@@ -177,7 +177,7 @@ public class ClubActivityDetailsFragment extends Fragment implements LoaderManag
         // Inflate the layout for this fragment
         view = inflater.inflate(R.layout.fragment_club_activity_details, container, false);
 
-        loadData();
+        greatPomodori = 0;
 
         tvTitle = (TextView) view.findViewById(R.id.tv_club_activity_title);
         tvShortNote = (TextView) view.findViewById(R.id.tv_club_activity_short_note);
@@ -512,14 +512,9 @@ public class ClubActivityDetailsFragment extends Fragment implements LoaderManag
     }
 
 
-    private void loadData(){
-        SharedPreferences sp = view.getContext().getSharedPreferences("MyPrefs", Context.MODE_PRIVATE);
-        greatPomodori = sp.getInt("GreatPomodori", 0);
-    }
-
     private void saveData(int newGreatPomodori){
         SharedPreferences sp = view.getContext().getSharedPreferences("MyPrefs", Context.MODE_PRIVATE);
         SharedPreferences.Editor mEditor = sp.edit();
-        mEditor.putInt("GreatPomodori", newGreatPomodori).commit();
+        mEditor.putInt("GreatPomodori"+String.valueOf(newGreatPomodori), 1).commit();
     }
 }

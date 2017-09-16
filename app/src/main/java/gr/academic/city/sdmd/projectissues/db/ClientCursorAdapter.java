@@ -29,7 +29,7 @@ public class ClientCursorAdapter extends CursorAdapter {
     public void bindView(View view, Context context, Cursor cursor) {
         TextView issue = (TextView) view.findViewById(R.id.tv_issue);
         int pos = cursor.getPosition()+1;
-        issue.setText(pos+". "+cursor.getString(cursor.getColumnIndex("title")));
+        issue.setText(pos+". "+cursor.getString(cursor.getColumnIndex("project_name")));
 
         TextView points = (TextView) view.findViewById(R.id.tv_issue_points);
         String cursorPoints = String.format("%.2f", cursor.getDouble(cursor.getColumnIndex("points")));

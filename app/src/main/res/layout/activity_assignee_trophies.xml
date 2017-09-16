@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="gr.academic.city.sdmd.projectissues.ui.activity.AssigneeTrophiesActivity">
+
+    <include
+        android:id="@+id/toolbar"
+        layout="@layout/layout_toolbar" />
+
+    <TableLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/toolbar">
+
+        <TableRow
+
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="@dimen/activity_horizontal_margin">
+
+            <ImageView
+                android:id="@+id/imageTrophy1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/cup_10"
+                android:visibility="invisible"
+                android:contentDescription="@string/imageTrophy" />
+
+            <ImageView
+                android:id="@+id/imageTrophy2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="1dp"
+                android:src="@drawable/cup_20"
+                android:visibility="invisible"
+                android:contentDescription="@string/imageTrophy" />
+
+            <ImageView
+                android:id="@+id/imageTrophy3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/cup_30"
+                android:visibility="invisible"
+                android:contentDescription="@string/imageTrophy" />
+        </TableRow>
+
+        <TableRow
+
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="@dimen/activity_horizontal_margin">
+
+            <ImageView
+                android:id="@+id/imageTrophy4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/cup_40"
+                android:visibility="invisible"
+                android:contentDescription="@string/imageTrophy" />
+
+            <ImageView
+                android:id="@+id/imageTrophy5"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/cup_50"
+                android:layout_margin="1dp"
+                android:visibility="invisible"
+                android:contentDescription="@string/imageTrophy" />
+
+            <ImageView
+                android:id="@+id/imageTrophy6"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:contentDescription="@string/imageTrophy"
+                android:src="@drawable/cup_60"
+                android:visibility="invisible" />
+        </TableRow>
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="@dimen/activity_horizontal_margin">
+
+            <ImageView
+                android:id="@+id/imageTrophy7"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:contentDescription="@string/imageTrophy"
+                android:src="@drawable/cup_70"
+                android:visibility="invisible" />
+
+            <ImageView
+                android:id="@+id/imageTrophy8"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="1dp"
+                android:contentDescription="@string/imageTrophy"
+                android:src="@drawable/cup_80"
+                android:visibility="invisible" />
+
+            <ImageView
+                android:id="@+id/imageTrophy9"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:contentDescription="@string/imageTrophy"
+                android:src="@drawable/cup_90"
+                android:visibility="invisible" />
+        </TableRow>
+
+    </TableLayout>
+
+
+</RelativeLayout>

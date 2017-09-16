@@ -50,10 +50,13 @@ public class PointsActivity extends ToolbarActivity {
         ProjectManagementDBHelper dbHelper = new ProjectManagementDBHelper(this);
         SQLiteDatabase sqLiteDatabase = dbHelper.getReadableDatabase();
 
-        String query = "Select a._id, a.title, (a.estimated_hours + (a.estimated_hours- sum(b.work_hours))) as points" +
+
+
+        String query = "Select c._id, c.project_name, (a.estimated_hours + (a.estimated_hours- sum(b.work_hours))) as points" +
                 " from project_issue a" +
                 " join  work_log b on a.server_id = b.issue_server_id" +
-                " group by a._id, a.server_id" +
+                " join  project c on a.club_server_id = c.server_id" +
+                " group by c._id, c.project_name" +
                 " order by  (a.estimated_hours + (a.estimated_hours- sum(b.work_hours))) desc";
 
         mCursor = sqLiteDatabase.rawQuery(query, null);

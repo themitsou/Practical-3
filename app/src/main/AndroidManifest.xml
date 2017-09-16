@@ -56,7 +56,7 @@
             android:name="gr.academic.city.sdmd.projectissues.ui.activity.PointsActivity"
             android:parentActivityName="gr.academic.city.sdmd.projectissues.ui.activity.MainActivity"
             android:launchMode="singleTop"
-            android:label="@string/issue_points">
+            android:label="@string/projects_ranking">
 
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
@@ -64,10 +64,10 @@
         </activity>
 
         <activity
-            android:name="gr.academic.city.sdmd.projectissues.ui.activity.AssigneePointsActivity"
+            android:name="gr.academic.city.sdmd.projectissues.ui.activity.AssigneeTrophiesActivity"
             android:parentActivityName="gr.academic.city.sdmd.projectissues.ui.activity.MainActivity"
             android:launchMode="singleTop"
-            android:label="@string/users_ranking">
+            android:label="@string/user_trophies">
 
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"

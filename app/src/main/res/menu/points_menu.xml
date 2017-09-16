@@ -4,14 +4,14 @@
 
     <!-- "Add", should appear as action button if possible -->
     <item
-        android:id="@+id/action_points"
-        app:showAsAction="ifRoom"
-        android:icon="@android:drawable/ic_menu_compass"
-        android:title="@string/action_points"/>
+        android:id="@+id/user_trophies"
+        android:icon="@drawable/cup"
+        android:title="@string/user_trophies"
+        app:showAsAction="ifRoom" />
     <item
-        android:id="@+id/action_assignee_points"
-        app:showAsAction="ifRoom"
-        android:icon="@android:drawable/ic_menu_sort_by_size"
-        android:title="@string/action_assignee_points"/>
+        android:id="@+id/action_project_points"
+        android:icon="@drawable/ranking"
+        android:title="@string/projects_ranking"
+        app:showAsAction="ifRoom" />
 
 </menu>
