@@ -47,7 +47,7 @@ public class TimeEntry {
     }
 
     public TimeEntry(Long issueId, double hours, String comments) {
-        this.setIssue(new Issue("","","","",issueId));
+        this.setIssue(new Issue("","","","","","",issueId));
         this.setHours(hours);
         this.setComments(comments);
 

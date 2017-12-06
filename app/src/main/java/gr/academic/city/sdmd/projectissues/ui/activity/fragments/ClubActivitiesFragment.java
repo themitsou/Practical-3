@@ -49,16 +49,17 @@ public class ClubActivitiesFragment extends Fragment implements SwipeRefreshLayo
             ProjectManagementContract.ProjectIssue.COLUMN_NAME_TITLE,
             ProjectManagementContract.ProjectIssue.COLUMN_NAME_SHORT_NOTE,
             ProjectManagementContract.ProjectIssue.COLUMN_NAME_TIMESTAMP,
+            ProjectManagementContract.ProjectIssue.COLUMN_NAME_START_DATE,
             ProjectManagementContract.ProjectIssue.COLUMN_NAME_SERVER_ID
     };
 
-    private static final String SORT_ORDER = ProjectManagementContract.ProjectIssue.COLUMN_NAME_TIMESTAMP + " DESC";
+    private static final String SORT_ORDER = ProjectManagementContract.ProjectIssue.COLUMN_NAME_START_DATE + " DESC";
 
 
     private final static String[] FROM_COLUMNS = {
             ProjectManagementContract.ProjectIssue.COLUMN_NAME_TITLE,
             ProjectManagementContract.ProjectIssue.COLUMN_NAME_SHORT_NOTE,
-            ProjectManagementContract.ProjectIssue.COLUMN_NAME_TIMESTAMP};
+            ProjectManagementContract.ProjectIssue.COLUMN_NAME_START_DATE};
 
     private final static int[] TO_IDS = {
             R.id.tv_club_activity_title,

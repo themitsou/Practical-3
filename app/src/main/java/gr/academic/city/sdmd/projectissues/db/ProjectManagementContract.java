@@ -35,6 +35,8 @@ public final class ProjectManagementContract {
         public static final String COLUMN_NAME_SHORT_NOTE = "short_note";
         public static final String COLUMN_NAME_LONG_NOTE = "long_note";
         public static final String COLUMN_NAME_TIMESTAMP = "timestamp";
+        public static final String COLUMN_NAME_START_DATE = "start_date";
+        public static final String COLUMN_NAME_DUE_DATE = "due_date";
         public static final String COLUMN_NAME_ESTIMATED_HOURS = "estimated_hours";
         public static final String COLUMN_NAME_UPLOADED_TO_SERVER = "uploaded_to_server";
         public static final String COLUMN_NAME_SERVER_ID = "server_id";

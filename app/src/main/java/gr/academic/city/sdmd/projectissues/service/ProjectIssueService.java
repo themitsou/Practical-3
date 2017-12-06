@@ -31,6 +31,8 @@ public class ProjectIssueService extends IntentService {
     private static final String EXTRA_SHORT_NOTE = "short_note";
     private static final String EXTRA_LONG_NOTE = "long_note";
     private static final String EXTRA_TIMESTAMP = "timestamp";
+    private static final String EXTRA_START_DATE = "start_date";
+    private static final String EXTRA_DUE_DATE = "due_date";
 
 
     private static final String ACTION_DELETE_PROJECT_ISSUE = "gr.academic.city.sdmd.studentsclubactivities.DELETE_CLUB_ACTIVITY";
@@ -61,7 +63,7 @@ public class ProjectIssueService extends IntentService {
         context.startService(intent);
     }
 
-    public static void startCreateProjectIssue(Context context, long clubServerId, String title, String shortNote, String longNote, long timestamp, double latitude, double longitude, String location) {
+    public static void startCreateProjectIssue(Context context, long clubServerId, String title, String shortNote, String longNote, String timestamp) {
         Intent intent = new Intent(context, ProjectIssueService.class);
         intent.setAction(ACTION_CREATE_PROJECT_ISSUE);
         intent.putExtra(EXTRA_PROJECT_SERVER_ID, clubServerId);
@@ -69,6 +71,10 @@ public class ProjectIssueService extends IntentService {
         intent.putExtra(EXTRA_SHORT_NOTE, shortNote);
         intent.putExtra(EXTRA_LONG_NOTE, longNote);
         intent.putExtra(EXTRA_TIMESTAMP, timestamp);
+        intent.putExtra(EXTRA_START_DATE, timestamp);
+        intent.putExtra(EXTRA_DUE_DATE, timestamp);
+
+
 
 
         context.startService(intent);
@@ -155,9 +161,11 @@ public class ProjectIssueService extends IntentService {
         String shortNote = intent.getStringExtra(EXTRA_SHORT_NOTE);
         String longNote = intent.getStringExtra(EXTRA_LONG_NOTE);
         String timestamp = intent.getStringExtra(EXTRA_TIMESTAMP);
+        String startDate = intent.getStringExtra(EXTRA_TIMESTAMP);
+        String dueDate = intent.getStringExtra(EXTRA_TIMESTAMP);
 
 
-        ContentValues contentValues = new Issue(title, shortNote, longNote, timestamp, clubServerId).toContentValues();
+        ContentValues contentValues = new Issue(title, shortNote, longNote, timestamp, startDate, dueDate, clubServerId).toContentValues();
         contentValues.put(ProjectManagementContract.ProjectIssue.COLUMN_NAME_UPLOADED_TO_SERVER, 0);
         contentValues.put(ProjectManagementContract.ProjectIssue.COLUMN_NAME_SERVER_ID, -1);
         contentValues.put(ProjectManagementContract.ProjectIssue.COLUMN_NAME_FOR_DELETION, 0);

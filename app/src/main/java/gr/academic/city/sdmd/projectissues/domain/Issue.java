@@ -17,6 +17,7 @@ public class Issue {
     private Status status;
     private Author author;
     private String start_date;
+    private String due_date;
     private String done_ratio;
     private double estimated_hours;
     private String created_on;
@@ -44,10 +45,13 @@ public class Issue {
 
     }
 
-    public Issue(String title, String shortNote, String longNote, String timestamp, long projectServerId) {
+    public Issue(String title, String shortNote, String longNote, String timestamp, String start_date, String due_date, long projectServerId) {
         this.setSubject(title);
         this.setDescription(shortNote);
         this.setTimestamp(timestamp);
+        this.setStart_date(start_date);
+        this.setDue_date(due_date);
+
         this.setProject(new Project(projectServerId));
     }
 
@@ -161,29 +165,57 @@ public class Issue {
         this.assigned_to = assigned_to;
     }
 
+    public String getDue_date() {
+        return due_date;
+    }
+
+    public void setDue_date(String due_date) {
+        this.due_date = due_date;
+    }
 
     public ContentValues toContentValues() {
         ContentValues contentValues = new ContentValues();
 
         contentValues.put(ProjectManagementContract.ProjectIssue.COLUMN_NAME_TITLE, getSubject());
         contentValues.put(ProjectManagementContract.ProjectIssue.COLUMN_NAME_SHORT_NOTE, getDescription());
+        String oldString, newString;
+        Date date;
 
-        String oldString = getStart_date();
-        Date date = null;
-        try {
-            date = new SimpleDateFormat("yyyy-MM-dd").parse(oldString);
-        } catch (ParseException e) {
-            e.printStackTrace();
+        if (getStart_date() !=null) {
+            oldString = getStart_date();
+            date = null;
+            try {
+                date = new SimpleDateFormat("yyyy-MM-dd").parse(oldString);
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+
+            newString = new SimpleDateFormat("dd-MM-yyyy").format(date);
+
+
+            contentValues.put(ProjectManagementContract.ProjectIssue.COLUMN_NAME_START_DATE, newString);
         }
-        String newString = new SimpleDateFormat("dd-MM-yyyy").format(date);
+
+        if (getDue_date() !=null) {
+
+            oldString = getDue_date();
+            date = null;
+            try {
+                date = new SimpleDateFormat("yyyy-MM-dd").parse(oldString);
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+            newString = new SimpleDateFormat("dd-MM-yyyy").format(date);
 
 
-        contentValues.put(ProjectManagementContract.ProjectIssue.COLUMN_NAME_TIMESTAMP, newString);
+            contentValues.put(ProjectManagementContract.ProjectIssue.COLUMN_NAME_DUE_DATE, newString);
+        }
+        contentValues.put(ProjectManagementContract.ProjectIssue.COLUMN_NAME_TIMESTAMP, getTimestamp());
         contentValues.put(ProjectManagementContract.ProjectIssue.COLUMN_NAME_ESTIMATED_HOURS, getEstimated_hours());
         contentValues.put(ProjectManagementContract.ProjectIssue.COLUMN_NAME_SERVER_ID, getId());
         contentValues.put(ProjectManagementContract.ProjectIssue.COLUMN_NAME_PROJECT_SERVER_ID, getProject().getServerId());
-        contentValues.put(ProjectManagementContract.ProjectIssue.COLUMN_NAME_ASSIGNEE_SERVER_ID, getAssigned_to().getId());
-        contentValues.put(ProjectManagementContract.ProjectIssue.COLUMN_NAME_ASSIGNEE_NAME, getAssigned_to().getName());
+//        contentValues.put(ProjectManagementContract.ProjectIssue.COLUMN_NAME_ASSIGNEE_SERVER_ID, getAssigned_to().getId());
+//        contentValues.put(ProjectManagementContract.ProjectIssue.COLUMN_NAME_ASSIGNEE_NAME, getAssigned_to().getName());
         return contentValues;
     }
 

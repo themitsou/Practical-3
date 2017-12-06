@@ -16,7 +16,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 
-
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -100,13 +100,23 @@ public class CreateClubActivityActivity extends ToolbarActivity {
     private void saveNewClubActivity() {
         //for test purposes, added as a default place
 
+        String oldString = tvDate.getText().toString();
+        Date date = null;
+        try {
+            date = new SimpleDateFormat("MM/dd/yyyy").parse(oldString);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        String newString = new SimpleDateFormat("yyyy-MM-dd").format(date);
+
+
 
         ProjectIssueService.startCreateProjectIssue(this,
                 clubServerId,
                 txtTitle.getText().toString(),
                 txtShortNote.getText().toString(),
                 txtLongNote.getText().toString(),
-                timestamp, 0,0, addressString);
+                newString);
 
         finish();
     }
