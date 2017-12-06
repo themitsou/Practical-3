@@ -109,20 +109,20 @@ public class ClubActivitiesFragment extends Fragment implements SwipeRefreshLayo
         });
 
         adapter = new SimpleCursorAdapter(view.getContext(), R.layout.item_club_activity, null, FROM_COLUMNS, TO_IDS, 0);
-        ((SimpleCursorAdapter) adapter).setViewBinder(new SimpleCursorAdapter.ViewBinder() {
-            @Override
-            public boolean setViewValue(View view, Cursor cursor, int columnIndex) {
-                if (columnIndex == cursor.getColumnIndexOrThrow(ProjectManagementContract.ProjectIssue.COLUMN_NAME_TIMESTAMP) && view instanceof TextView) {
-                    // we have to convert the timestamp to a human readable date)
-
-                    TextView textView = (TextView) view;
-                    textView.setText(dateFormat.format(new Date(cursor.getLong(columnIndex))));
-                    return true;
-                } else {
-                    return false;
-                }
-            }
-        });
+//        ((SimpleCursorAdapter) adapter).setViewBinder(new SimpleCursorAdapter.ViewBinder() {
+//            @Override
+//            public boolean setViewValue(View view, Cursor cursor, int columnIndex) {
+//                if (columnIndex == cursor.getColumnIndexOrThrow(ProjectManagementContract.ProjectIssue.COLUMN_NAME_TIMESTAMP) && view instanceof TextView) {
+//                    // we have to convert the timestamp to a human readable date)
+//
+//                    TextView textView = (TextView) view;
+//                    textView.setText(dateFormat.format(new Date(cursor.getLong(columnIndex))));
+//                    return true;
+//                } else {
+//                    return false;
+//                }
+//            }
+//        });
 
         ListView resultsListView = (ListView) view.findViewById(android.R.id.list);
         resultsListView.setAdapter(adapter);

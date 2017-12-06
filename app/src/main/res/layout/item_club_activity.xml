@@ -2,7 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="55dp">
+    android:layout_height="60dp">
 
     <FrameLayout
         android:id="@+id/layoutWithCircleDrawable"
@@ -27,12 +27,11 @@
         android:id="@+id/tv_club_activity_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="10dp"
-        android:layout_centerVertical="true"
-        android:layout_toEndOf="@+id/layoutWithCircleDrawable"
-        android:layout_toRightOf="@+id/layoutWithCircleDrawable"
         android:textSize="20sp"
-        tools:text="Club Activity Title" />
+        tools:text="Club Activity Title"
+        android:layout_alignTop="@+id/layoutWithCircleDrawable"
+        android:layout_alignLeft="@+id/tv_club_activity_short_note"
+        android:layout_alignStart="@+id/tv_club_activity_short_note" />
 
     <TextView
         android:id="@+id/tv_club_activity_short_note"

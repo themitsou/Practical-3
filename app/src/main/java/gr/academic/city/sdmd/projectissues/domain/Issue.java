@@ -4,11 +4,13 @@ import android.content.ContentValues;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 import gr.academic.city.sdmd.projectissues.db.ProjectManagementContract;
 
-/**
- * Created by trumpets on 4/13/16.
- */
+
 public class Issue {
 
     private Tracker tracker;
@@ -165,7 +167,18 @@ public class Issue {
 
         contentValues.put(ProjectManagementContract.ProjectIssue.COLUMN_NAME_TITLE, getSubject());
         contentValues.put(ProjectManagementContract.ProjectIssue.COLUMN_NAME_SHORT_NOTE, getDescription());
-        contentValues.put(ProjectManagementContract.ProjectIssue.COLUMN_NAME_TIMESTAMP, getTimestamp());
+
+        String oldString = getStart_date();
+        Date date = null;
+        try {
+            date = new SimpleDateFormat("yyyy-MM-dd").parse(oldString);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        String newString = new SimpleDateFormat("dd-MM-yyyy").format(date);
+
+
+        contentValues.put(ProjectManagementContract.ProjectIssue.COLUMN_NAME_TIMESTAMP, newString);
         contentValues.put(ProjectManagementContract.ProjectIssue.COLUMN_NAME_ESTIMATED_HOURS, getEstimated_hours());
         contentValues.put(ProjectManagementContract.ProjectIssue.COLUMN_NAME_SERVER_ID, getId());
         contentValues.put(ProjectManagementContract.ProjectIssue.COLUMN_NAME_PROJECT_SERVER_ID, getProject().getServerId());

@@ -10,6 +10,10 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
+import android.media.AudioManager;
+import android.media.MediaPlayer;
+import android.media.RingtoneManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.Handler;
@@ -35,6 +39,7 @@ import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
@@ -95,6 +100,8 @@ public class ClubActivityDetailsFragment extends Fragment implements LoaderManag
 
         @Override
         public void onFinish() {
+            playSound();
+            vibrate();
             showEndWorkNotification(clubActivityId);
             insertIssueComment();
         }
@@ -111,6 +118,8 @@ public class ClubActivityDetailsFragment extends Fragment implements LoaderManag
 
         @Override
         public void onFinish() {
+            playSound();
+            vibrate();
             showEndBreakNotification(clubActivityId);
             proceedToWork();
         }
@@ -126,18 +135,47 @@ public class ClubActivityDetailsFragment extends Fragment implements LoaderManag
 
         @Override
         public void onFinish() {
+            playSound();
             vibrate();
             showEndBreakNotification(clubActivityId);
             proceedToWork();
         }
     };
 
+    private void playSound() {
+        Uri defaultRingtoneUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+
+        MediaPlayer mediaPlayer = new MediaPlayer();
+
+        try {
+            mediaPlayer.setDataSource(this.getContext(), defaultRingtoneUri);
+            mediaPlayer.setAudioStreamType(AudioManager.STREAM_NOTIFICATION);
+            mediaPlayer.prepare();
+            mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+
+                @Override
+                public void onCompletion(MediaPlayer mp)
+                {
+                    mp.release();
+                }
+            });
+            mediaPlayer.start();
+        } catch (IllegalArgumentException e) {
+            e.printStackTrace();
+        } catch (SecurityException e) {
+            e.printStackTrace();
+        } catch (IllegalStateException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
     private void vibrate() {
         // Get instance of Vibrator from current Context
         Vibrator v = (Vibrator) this.getContext().getSystemService(Context.VIBRATOR_SERVICE);
 
-        // Vibrate for 400 milliseconds
-        v.vibrate(400);
+        v.vibrate(2000);
     }
 
 
@@ -274,7 +312,7 @@ public class ClubActivityDetailsFragment extends Fragment implements LoaderManag
             tvTitle.setText(cursor.getString(cursor.getColumnIndexOrThrow(ProjectManagementContract.ProjectIssue.COLUMN_NAME_TITLE)));
             tvShortNote.setText(cursor.getString(cursor.getColumnIndexOrThrow(ProjectManagementContract.ProjectIssue.COLUMN_NAME_SHORT_NOTE)));
             tvLongNote.setText(cursor.getString(cursor.getColumnIndexOrThrow(ProjectManagementContract.ProjectIssue.COLUMN_NAME_LONG_NOTE)));
-            tvDate.setText(dateFormat.format(new Date(cursor.getLong(cursor.getColumnIndexOrThrow(ProjectManagementContract.ProjectIssue.COLUMN_NAME_TIMESTAMP)))));
+            tvDate.setText(cursor.getString(cursor.getColumnIndexOrThrow(ProjectManagementContract.ProjectIssue.COLUMN_NAME_TIMESTAMP)));
             serverIssueID = cursor.getLong(cursor.getColumnIndexOrThrow(ProjectManagementContract.ProjectIssue.COLUMN_NAME_SERVER_ID));
         }
 
