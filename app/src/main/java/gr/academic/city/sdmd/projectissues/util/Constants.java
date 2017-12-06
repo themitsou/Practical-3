@@ -15,5 +15,5 @@ public final class Constants {
     public static final String DELETE_PROJECT_ISSUES_URL = SERVER_URL + "issues/{0}.json";
     public static final String WORK_LOGS_URL = SERVER_URL + "time_entries.json";
 
-    public static final String PROJECT_ISSUES_DATE_FORMAT = "MM/dd/yyyy";
+    public static final String PROJECT_ISSUES_DATE_FORMAT = "dd-MM-yyyy";
 }

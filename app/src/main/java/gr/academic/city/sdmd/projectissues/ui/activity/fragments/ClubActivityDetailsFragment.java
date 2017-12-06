@@ -219,7 +219,7 @@ public class ClubActivityDetailsFragment extends Fragment implements LoaderManag
 
         tvTitle = (TextView) view.findViewById(R.id.tv_club_activity_title);
         tvShortNote = (TextView) view.findViewById(R.id.tv_club_activity_short_note);
-        tvLongNote = (TextView) view.findViewById(R.id.tv_club_activity_long_note);
+//        tvLongNote = (TextView) view.findViewById(R.id.tv_club_activity_long_note);
         tvDate = (TextView) view.findViewById(R.id.tv_club_activity_date);
 
         tvProgress = (TextView) view.findViewById(R.id.tv_progressText);
@@ -311,7 +311,7 @@ public class ClubActivityDetailsFragment extends Fragment implements LoaderManag
         if (cursor != null && cursor.moveToFirst()) {
             tvTitle.setText(cursor.getString(cursor.getColumnIndexOrThrow(ProjectManagementContract.ProjectIssue.COLUMN_NAME_TITLE)));
             tvShortNote.setText(cursor.getString(cursor.getColumnIndexOrThrow(ProjectManagementContract.ProjectIssue.COLUMN_NAME_SHORT_NOTE)));
-            tvLongNote.setText(cursor.getString(cursor.getColumnIndexOrThrow(ProjectManagementContract.ProjectIssue.COLUMN_NAME_LONG_NOTE)));
+//            tvLongNote.setText(cursor.getString(cursor.getColumnIndexOrThrow(ProjectManagementContract.ProjectIssue.COLUMN_NAME_LONG_NOTE)));
             tvDate.setText(cursor.getString(cursor.getColumnIndexOrThrow(ProjectManagementContract.ProjectIssue.COLUMN_NAME_START_DATE)));
             serverIssueID = cursor.getLong(cursor.getColumnIndexOrThrow(ProjectManagementContract.ProjectIssue.COLUMN_NAME_SERVER_ID));
         }

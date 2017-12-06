@@ -103,7 +103,7 @@ public class CreateClubActivityActivity extends ToolbarActivity {
         String oldString = tvDate.getText().toString();
         Date date = null;
         try {
-            date = new SimpleDateFormat("MM/dd/yyyy").parse(oldString);
+            date = new SimpleDateFormat("dd-MM-yyyy").parse(oldString);
         } catch (ParseException e) {
             e.printStackTrace();
         }

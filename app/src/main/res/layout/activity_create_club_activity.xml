@@ -30,7 +30,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/txt_club_activity_title"
         android:layout_marginTop="10dp"
-        android:hint="@string/short_note"/>
+        android:hint="@string/description"/>
 
     <EditText
         android:id="@+id/txt_club_activity_long_note"
@@ -38,6 +38,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/txt_club_activity_short_note"
         android:layout_marginTop="10dp"
+        android:visibility="invisible"
         android:hint="@string/long_note"/>
 
     <TextView
@@ -45,6 +46,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/txt_club_activity_long_note"
         android:text=" Location"
+        android:visibility="invisible"
         android:paddingTop="15dp"
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:id="@+id/textView" />

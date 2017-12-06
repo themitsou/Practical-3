@@ -4,6 +4,7 @@
     <string name="msg_no_clubs_activities">There are no project issues to show right now. Refresh.</string>
     <string name="add_activity">Add Activity</string>
     <string name="title">Title</string>
+    <string name="description">Description</string>
     <string name="short_note">Short Note</string>
     <string name="long_note">Long Note</string>
     <string name="location">Location</string>
