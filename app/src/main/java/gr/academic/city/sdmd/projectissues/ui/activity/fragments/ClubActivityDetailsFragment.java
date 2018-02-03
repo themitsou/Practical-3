@@ -175,7 +175,7 @@ public class ClubActivityDetailsFragment extends Fragment implements LoaderManag
         // Get instance of Vibrator from current Context
         Vibrator v = (Vibrator) this.getContext().getSystemService(Context.VIBRATOR_SERVICE);
 
-        v.vibrate(2000);
+        v.vibrate(500);
     }
 
 
