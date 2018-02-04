@@ -97,6 +97,17 @@
                 android:value="gr.academic.city.sdmd.projectissues.ui.activity.PointsActivity" />
         </activity>
 
+        <activity
+            android:name="gr.academic.city.sdmd.projectissues.ui.activity.ChartsActivity"
+            android:parentActivityName="gr.academic.city.sdmd.projectissues.ui.activity.ClubActivitiesActivity"
+            android:launchMode="singleTop"
+            android:label="@string/issue_time">
+
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="gr.academic.city.sdmd.projectissues.ui.activity.ClubActivitiesActivity" />
+        </activity>
+
         <service
             android:name="gr.academic.city.sdmd.projectissues.service.ProjectService"
             android:enabled="true"

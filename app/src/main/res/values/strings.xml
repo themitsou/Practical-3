@@ -36,6 +36,7 @@
     <string name="user_trophies">User Trophies</string>
     <string name="issue_points">Issue Points</string>
     <string name="assignee_points">Assignee Points</string>
+    <string name="issue_time">Issues time use</string>
     <string name="first_trophy_message">Great Job! You have completed 4 sessions in a row!</string>
 
 

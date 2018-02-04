@@ -77,6 +77,7 @@ public class MainActivity extends ToolbarActivity implements LoaderManager.Loade
         });
 
         getSupportLoaderManager().initLoader(CLUBS_LOADER, null, this);
+
     }
 
 

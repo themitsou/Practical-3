@@ -16,6 +16,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import java.lang.ref.WeakReference;
@@ -37,7 +38,7 @@ public class ClubActivitiesFragment extends Fragment implements SwipeRefreshLayo
     private static final String ARG_PARAM1 = "param1";
     private Long mParam1;
     private SwipeRefreshLayout swipeRefreshLayout;
-    private CursorAdapter adapter;
+    private SimpleCursorAdapter adapter;
     private View view;
     private SimpleDateFormat dateFormat = new SimpleDateFormat(Constants.PROJECT_ISSUES_DATE_FORMAT);
     private static final int CLUB_ACTIVITIES_LOADER = 10;
@@ -110,6 +111,7 @@ public class ClubActivitiesFragment extends Fragment implements SwipeRefreshLayo
         });
 
         adapter = new SimpleCursorAdapter(view.getContext(), R.layout.item_club_activity, null, FROM_COLUMNS, TO_IDS, 0);
+
 //        ((SimpleCursorAdapter) adapter).setViewBinder(new SimpleCursorAdapter.ViewBinder() {
 //            @Override
 //            public boolean setViewValue(View view, Cursor cursor, int columnIndex) {
@@ -139,8 +141,6 @@ public class ClubActivitiesFragment extends Fragment implements SwipeRefreshLayo
 
         return view;
     }
-
-
 
     @Override
     public void onAttach(Context context) {

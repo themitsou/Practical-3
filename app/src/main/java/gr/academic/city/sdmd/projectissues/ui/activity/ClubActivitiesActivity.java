@@ -124,6 +124,9 @@ public class ClubActivitiesActivity extends ToolbarActivity implements ClubActiv
             case R.id.action_add:
                 startActivity(CreateClubActivityActivity.getStartIntent(ClubActivitiesActivity.this, clubServerId));
                 return true;
+            case R.id.action_issues_time:
+                startActivity(ChartsActivity.getStartIntent(ClubActivitiesActivity.this,clubServerId));
+                return true;
 
             default:
                 return super.onOptionsItemSelected(item);
