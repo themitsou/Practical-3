@@ -214,10 +214,54 @@ public class Issue {
         contentValues.put(ProjectManagementContract.ProjectIssue.COLUMN_NAME_ESTIMATED_HOURS, getEstimated_hours());
         contentValues.put(ProjectManagementContract.ProjectIssue.COLUMN_NAME_SERVER_ID, getId());
         contentValues.put(ProjectManagementContract.ProjectIssue.COLUMN_NAME_PROJECT_SERVER_ID, getProject().getServerId());
+        contentValues.put(ProjectManagementContract.ProjectIssue.COLUMN_NAME_ASSIGNEE_SERVER_ID, getAssigned_to().getId());
+        contentValues.put(ProjectManagementContract.ProjectIssue.COLUMN_NAME_ASSIGNEE_NAME, getAssigned_to().getName());
+        return contentValues;
+    }
+
+    public ContentValues toCreateContentValues() {
+        ContentValues contentValues = new ContentValues();
+
+        contentValues.put(ProjectManagementContract.ProjectIssue.COLUMN_NAME_TITLE, getSubject());
+        contentValues.put(ProjectManagementContract.ProjectIssue.COLUMN_NAME_SHORT_NOTE, getDescription());
+        String oldString, newString;
+        Date date;
+
+        if (getStart_date() !=null) {
+            oldString = getStart_date();
+            date = null;
+            try {
+                date = new SimpleDateFormat("yyyy-MM-dd").parse(oldString);
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+
+            newString = new SimpleDateFormat("dd-MM-yyyy").format(date);
+
+
+            contentValues.put(ProjectManagementContract.ProjectIssue.COLUMN_NAME_START_DATE, newString);
+        }
+
+        if (getDue_date() !=null) {
+
+            oldString = getDue_date();
+            date = null;
+            try {
+                date = new SimpleDateFormat("yyyy-MM-dd").parse(oldString);
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+            newString = new SimpleDateFormat("dd-MM-yyyy").format(date);
+
+
+            contentValues.put(ProjectManagementContract.ProjectIssue.COLUMN_NAME_DUE_DATE, newString);
+        }
+        contentValues.put(ProjectManagementContract.ProjectIssue.COLUMN_NAME_TIMESTAMP, getTimestamp());
+        contentValues.put(ProjectManagementContract.ProjectIssue.COLUMN_NAME_ESTIMATED_HOURS, getEstimated_hours());
+        contentValues.put(ProjectManagementContract.ProjectIssue.COLUMN_NAME_SERVER_ID, getId());
+        contentValues.put(ProjectManagementContract.ProjectIssue.COLUMN_NAME_PROJECT_SERVER_ID, getProject().getServerId());
 //        contentValues.put(ProjectManagementContract.ProjectIssue.COLUMN_NAME_ASSIGNEE_SERVER_ID, getAssigned_to().getId());
 //        contentValues.put(ProjectManagementContract.ProjectIssue.COLUMN_NAME_ASSIGNEE_NAME, getAssigned_to().getName());
         return contentValues;
     }
-
-
 }

@@ -52,11 +52,11 @@ public class PointsActivity extends ToolbarActivity {
 
 
 
-        String query = "Select c._id, c.project_name, (a.estimated_hours + (a.estimated_hours- sum(b.work_hours))) as points" +
+        String query = "Select c._id, c.server_id, c.project_name, (a.estimated_hours + (a.estimated_hours- sum(b.work_hours))) as points" +
                 " from project_issue a" +
                 " join  work_log b on a.server_id = b.issue_server_id" +
                 " join  project c on a.club_server_id = c.server_id" +
-                " group by c._id, c.project_name" +
+                " group by c._id, c.server_id, c.project_name" +
                 " order by  (a.estimated_hours + (a.estimated_hours- sum(b.work_hours))) desc";
 
         mCursor = sqLiteDatabase.rawQuery(query, null);
@@ -85,7 +85,16 @@ public class PointsActivity extends ToolbarActivity {
 
         });
 
-
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Cursor cursor = customAdapter.getCursor();
+                if (cursor.moveToPosition(position)) {
+                   startActivity(AssigneePointsActivity.getStartIntent(PointsActivity.this,
+                            cursor.getLong(cursor.getColumnIndexOrThrow(ProjectManagementContract.Project.COLUMN_NAME_SERVER_ID))));
+                }
+            }
+        });
     }
 
 

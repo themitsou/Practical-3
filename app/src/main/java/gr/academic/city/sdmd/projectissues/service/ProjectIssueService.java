@@ -165,10 +165,11 @@ public class ProjectIssueService extends IntentService {
         String dueDate = intent.getStringExtra(EXTRA_TIMESTAMP);
 
 
-        ContentValues contentValues = new Issue(title, shortNote, longNote, timestamp, startDate, dueDate, clubServerId).toContentValues();
+        ContentValues contentValues = new Issue(title, shortNote, longNote, timestamp, startDate, dueDate, clubServerId).toCreateContentValues();
         contentValues.put(ProjectManagementContract.ProjectIssue.COLUMN_NAME_UPLOADED_TO_SERVER, 0);
         contentValues.put(ProjectManagementContract.ProjectIssue.COLUMN_NAME_SERVER_ID, -1);
         contentValues.put(ProjectManagementContract.ProjectIssue.COLUMN_NAME_FOR_DELETION, 0);
+        contentValues.put(ProjectManagementContract.ProjectIssue.COLUMN_NAME_ASSIGNEE_SERVER_ID, 5);
 
         getContentResolver().insert(
                 ProjectManagementContract.ProjectIssue.CONTENT_URI,

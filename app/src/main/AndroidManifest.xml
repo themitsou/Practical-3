@@ -86,6 +86,17 @@
                 android:value="gr.academic.city.sdmd.projectissues.ui.activity.ClubActivitiesActivity" />
         </activity>
 
+        <activity
+            android:name="gr.academic.city.sdmd.projectissues.ui.activity.AssigneePointsActivity"
+            android:parentActivityName="gr.academic.city.sdmd.projectissues.ui.activity.PointsActivity"
+            android:launchMode="singleTop"
+            android:label="@string/assignee_points">
+
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="gr.academic.city.sdmd.projectissues.ui.activity.PointsActivity" />
+        </activity>
+
         <service
             android:name="gr.academic.city.sdmd.projectissues.service.ProjectService"
             android:enabled="true"

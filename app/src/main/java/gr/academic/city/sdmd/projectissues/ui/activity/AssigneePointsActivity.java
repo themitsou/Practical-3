@@ -1,5 +1,7 @@
 package gr.academic.city.sdmd.projectissues.ui.activity;
 
+import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
@@ -32,6 +34,17 @@ public class AssigneePointsActivity extends ToolbarActivity {
     AssigneeClientCursorAdapter customAdapter;
     private Cursor mCursor;
     private ListView listView;
+    private long serverId;
+
+    private static final String EXTRA_SERVER_ID = "server_id";
+
+
+    public static Intent getStartIntent(Context context, long ServerId) {
+        Intent intent = new Intent(context, AssigneePointsActivity.class);
+        intent.putExtra(EXTRA_SERVER_ID, ServerId);
+
+        return intent;
+    }
 
     private SwipeRefreshLayout swipeRefreshLayout;
 
@@ -46,16 +59,19 @@ public class AssigneePointsActivity extends ToolbarActivity {
         ActionBar ab = getSupportActionBar();
         ab.setDisplayHomeAsUpEnabled(true);
 
+        this.serverId = getIntent().getLongExtra(EXTRA_SERVER_ID, -1);
+
         listView = (ListView) findViewById(R.id.list);
 
         ProjectManagementDBHelper dbHelper = new ProjectManagementDBHelper(this);
         SQLiteDatabase sqLiteDatabase = dbHelper.getReadableDatabase();
 
-        String query = "Select a._id, a.assignee_server_id, a.assignee_name,  ( 2*sum(distinct estimated_hours)- sum(b.work_hours)) as points" +
+        String query = "Select a._id, a.assignee_server_id, a.assignee_name,  (a.estimated_hours + (a.estimated_hours- sum(b.work_hours))) as points" +
                 " from project_issue a" +
                 " join  work_log b on a.server_id = b.issue_server_id" +
+                " where a.club_server_id = "+ Long.toString(serverId)+
                 " group by a.assignee_server_id"+
-                " order by ( 2*sum(distinct estimated_hours)- sum(b.work_hours)) desc";
+                " order by (a.estimated_hours + (a.estimated_hours- sum(b.work_hours))) desc";
 
         mCursor = sqLiteDatabase.rawQuery(query, null);
 

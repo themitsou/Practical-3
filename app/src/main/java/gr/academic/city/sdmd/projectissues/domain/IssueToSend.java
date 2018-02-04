@@ -12,15 +12,17 @@ public class IssueToSend {
     private Long estimated_hours;
     private String description;
     private String subject;
+    private Long assigned_to_id;
 
     public IssueToSend() {
 
     }
 
-    public IssueToSend(Long project_id, String description, String subject) {
+    public IssueToSend(Long project_id, String description, String subject, Long assigned_to_id) {
         this.project_id = project_id;
         this.description = description;
         this.subject = subject;
+        this.setAssigned_to_id(assigned_to_id);
     }
 
     public Long getProject_id() {
@@ -77,6 +79,14 @@ public class IssueToSend {
 
     public void setPriority_id(Long priority_id) {
         this.priority_id = priority_id;
+    }
+
+    public Long getAssigned_to_id() {
+        return assigned_to_id;
+    }
+
+    public void setAssigned_to_id(Long assigned_to_id) {
+        this.assigned_to_id = assigned_to_id;
     }
 }
 

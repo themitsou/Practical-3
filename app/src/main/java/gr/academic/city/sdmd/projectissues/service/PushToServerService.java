@@ -76,8 +76,9 @@ public class PushToServerService extends IntentService {
             String shortNote = cursor.getString(cursor.getColumnIndexOrThrow(ProjectManagementContract.ProjectIssue.COLUMN_NAME_SHORT_NOTE));
             String longNote = cursor.getString(cursor.getColumnIndexOrThrow(ProjectManagementContract.ProjectIssue.COLUMN_NAME_LONG_NOTE));
             String timestamp = cursor.getString(cursor.getColumnIndexOrThrow(ProjectManagementContract.ProjectIssue.COLUMN_NAME_TIMESTAMP));
+            Long assignedTo= cursor.getLong(cursor.getColumnIndexOrThrow(ProjectManagementContract.ProjectIssue.COLUMN_NAME_ASSIGNEE_SERVER_ID));
 
-            executeRequest(Constants.PROJECT_ISSUE_URL, Commons.ConnectionMethod.POST, new Gson().toJson(new MasterIssueToSend(new IssueToSend(projectServerId, title, shortNote))), new Commons.ResponseCallback() {
+            executeRequest(Constants.PROJECT_ISSUE_URL, Commons.ConnectionMethod.POST, new Gson().toJson(new MasterIssueToSend(new IssueToSend(projectServerId, title, shortNote,assignedTo))), new Commons.ResponseCallback() {
                 @Override
                 public void onResponse(int responseCode, String responsePayload) {
                     String serverID ="-1";
