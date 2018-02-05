@@ -2,6 +2,7 @@ package gr.academic.city.sdmd.projectissues.db;
 
 import android.content.Context;
 import android.database.Cursor;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -38,6 +39,13 @@ public class ChartsCursorAdapter extends CursorAdapter {
         TextView percentage = (TextView) view.findViewById(R.id.tv_issue_percentage);
         String cursorPercentage = String.format("%.2f", cursor.getDouble(cursor.getColumnIndex("percentage")))+"%";
         percentage.setText(cursorPercentage);
+
+        if (cursor.getColumnIndex("percentage")<=100) {
+            percentage.setTextColor(Color.rgb(150,225,0));
+        }else{
+            percentage.setTextColor(Color.RED);
+        }
+
     }
 
     public View newView(Context context, Cursor cursor, ViewGroup parent) {
